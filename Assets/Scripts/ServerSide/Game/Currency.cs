@@ -7,6 +7,9 @@ using UnityEngine.Networking;
 
 public class Currency : MonoBehaviour
 {
+    #region UI
+    [SerializeField] private UserUI _currencyUI;
+    #endregion
     private static int gold;
 
     public int Gold { get => gold; set => gold = value; }
@@ -30,8 +33,9 @@ public class Currency : MonoBehaviour
 
         yield return www.SendWebRequest();
         if (www.error != null) { Debug.Log("Не удалось связаться с сервером!"); yield break; }
-       
+        Debug.Log(www.downloadHandler.text);
         User.Currency = JsonUtility.FromJson<PlayerCurrency>(www.downloadHandler.text);
+        _currencyUI.SetUpCurrencyValue();
     }
 }
 

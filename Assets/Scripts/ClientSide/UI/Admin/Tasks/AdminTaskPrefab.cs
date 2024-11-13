@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using JetBrains.Annotations;
-using System.Reflection;
-using UnityEngine.Apple.ReplayKit;
 
 public class AdminTaskPrefab : MonoBehaviour
 {

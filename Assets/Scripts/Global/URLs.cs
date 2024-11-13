@@ -3,8 +3,8 @@ using System;
 public class URLs
 {
     #region UsersURLs
-    private static string _authorization = "https://tracker.local/DBHandler/authorization.php";
-    private static string _userCurrency = "https://tracker.local/DBHandler/usercurrency.php";
+    private static string _authorization = "https://unnamedplace.ru/dbhelper/authorization.php";
+    private static string _userCurrency = "https://unnamedplace.ru/dbhelper/usercurrency.php";
 
     public static string Authorization { get => _authorization; set => _authorization = value; }
     public static string UserCurrency { get => _userCurrency; set => _userCurrency = value; }
@@ -13,16 +13,17 @@ public class URLs
 
     #region AdminsURLs
     #region Tasks
-    private static string _taskSettings = "https://tracker.local/DBHandler/tasksettings.php";
-    private static string _newTask = "https://tracker.local/DBHandler/newtask.php";
-    private static string _updateTask = "https://tracker.local/DBHandler/updatetask.php";
-    private static string _deleteTask = "https://tracker.local/DBHandler/deletetask.php";
-    private static string _scheduleTask = "https://tracker.local/DBHandler/scheduletask.php";
-    private static string _deScheduleTask = "https://tracker.local/DBHandler/descheduletask.php";
+    private static string _taskSettings = "https://unnamedplace.ru/dbhelper/tasksettings.php";
+    private static string _newTask = "https://unnamedplace.ru/dbhelper/newtask.php";
+    private static string _updateTask = "https://unnamedplace.ru/dbhelper/updatetask.php";
+    private static string _deleteTask = "https://unnamedplace.ru/dbhelper/deletetask.php";
+    private static string _scheduleTask = "https://unnamedplace.ru/dbhelper/scheduletask.php";
+    private static string _dailyTask = "https://unnamedplace.ru/dbhelper/dailytasks.php";
+    private static string _deScheduleTask = "https://unnamedplace.ru/dbhelper/descheduletask.php";
     #endregion
 
     #region Users
-    private static string _users = "https://tracker.local/DBHandler/admin_userssettings.php";
+    private static string _users = "https://unnamedplace.ru/dbhelper/admin_userssettings.php";
     #endregion
 
     #region Get/Set
@@ -33,6 +34,7 @@ public class URLs
     public static string ScheduleTask { get => _scheduleTask; set => _scheduleTask = value; }
     public static string DeScheduleTask { get => _deScheduleTask; set => _deScheduleTask = value; }
     public static string Users { get => _users; set => _users = value; }
+    public static string DailyTask { get => _dailyTask; set => _dailyTask = value; }
     #endregion
 
     #endregion

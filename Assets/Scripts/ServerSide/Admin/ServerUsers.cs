@@ -33,10 +33,10 @@ public class ServerUsers : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        GetList(DBTablesName.Users, true);
-    }
+    //private void Start()
+    //{
+    //    GetList(DBTablesName.Users, true);
+    //}
 
     public void GetList(string tableName, bool isLastTable)
     {

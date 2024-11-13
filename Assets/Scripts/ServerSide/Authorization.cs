@@ -24,7 +24,7 @@ public class Authorization : MonoBehaviour
         www.timeout = ServerSettings.TimeOut;
 
         yield return www.SendWebRequest();
-        if (www.error != null) { _notification.NotificationIn("Не удалось связаться с сервером!"); yield break; }
+        if (www.error != null) { _notification.NotificationIn(www.error); yield break; }
         if (www.downloadHandler.text.Equals("")) { _notification.NotificationIn("Введен неверный логин или пароль!"); yield break; }
         User.Player = JsonUtility.FromJson<Player>(www.downloadHandler.text);
         

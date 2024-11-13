@@ -1,11 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using System;
-using Unity.VisualScripting;
-using static UnityEditor.Progress;
 
 public class EditTaskPanel : MonoBehaviour
 {

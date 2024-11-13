@@ -16,6 +16,7 @@ public class User
 public class Player
 {
     public int user_id;
+    public string login;
     public string user_type;
 }
 
