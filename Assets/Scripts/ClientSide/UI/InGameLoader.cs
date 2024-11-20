@@ -34,6 +34,14 @@ public class InGameLoader : MonoBehaviour
         _loader = loader;
     }
 
+    public void SetBorryActive(bool isActive)
+    {
+        IsBorryActivate = isActive;
+    }
+    //private void FixedUpdate()
+    //{
+    //  Debug.Log("IsBorryActivate: " + IsBorryActivate);
+    //}
     private void OnEnable()
     {
         Actions.OnStartLoad += ActivateLoadPanel;

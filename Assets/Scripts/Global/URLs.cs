@@ -24,6 +24,7 @@ public class URLs
 
     #region Users
     private static string _users = "https://unnamedplace.ru/dbhelper/admin_userssettings.php";
+    private static string _userCompletedTask = "https://unnamedplace.ru/dbhelper/usertask.php";
     #endregion
 
     #region Get/Set
@@ -35,6 +36,7 @@ public class URLs
     public static string DeScheduleTask { get => _deScheduleTask; set => _deScheduleTask = value; }
     public static string Users { get => _users; set => _users = value; }
     public static string DailyTask { get => _dailyTask; set => _dailyTask = value; }
+    public static string UserCompletedTask { get => _userCompletedTask; set => _userCompletedTask = value; }
     #endregion
 
     #endregion

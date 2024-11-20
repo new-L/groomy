@@ -48,8 +48,8 @@ public class TaskParse : MonoBehaviour
         else if (tableName.Equals(DBTablesName.Dailytasks))
         {
             DailyTasks = JsonHelper.FromJson<ScheduleTasks>(_json, tableName);
-            InGameLoader.IsBorryActivate = false;
-            Actions.OnTaskSettingsLoad?.Invoke();
+            //InGameLoader.IsBorryActivate = false;
+            Actions.OnDailyTaskLoad?.Invoke();
         }
     }
 

@@ -11,6 +11,7 @@ public class Actions : MonoBehaviour
     public static UnityAction OnTaskSettingsLoad;
     public static UnityAction OnTaskListLoaded;
     public static UnityAction OnUserDatasLoad;
+    public static UnityAction OnDailyTaskLoad;
     
     public static UnityAction OnListCreated;
 }
