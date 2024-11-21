@@ -20,6 +20,7 @@ public class URLs
     private static string _scheduleTask = "https://unnamedplace.ru/dbhelper/scheduletask.php";
     private static string _dailyTask = "https://unnamedplace.ru/dbhelper/dailytasks.php";
     private static string _deScheduleTask = "https://unnamedplace.ru/dbhelper/descheduletask.php";
+    private static string _taskOnReview = "https://unnamedplace.ru/dbhelper/taskonreview.php";
     #endregion
 
     #region Users
@@ -37,6 +38,7 @@ public class URLs
     public static string Users { get => _users; set => _users = value; }
     public static string DailyTask { get => _dailyTask; set => _dailyTask = value; }
     public static string UserCompletedTask { get => _userCompletedTask; set => _userCompletedTask = value; }
+    public static string TaskOnReview { get => _taskOnReview; set => _taskOnReview = value; }
     #endregion
 
     #endregion

@@ -23,6 +23,6 @@ public class Player
 [Serializable]
 public class PlayerCurrency
 {
-    public int gold_count;
+    public int gold_count = 0;
 }
 

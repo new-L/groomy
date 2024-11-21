@@ -6,6 +6,8 @@ public class ServerSettings : MonoBehaviour
 {
 
     private static int _timeOut = 15;
+    private static int _cooldown = 30;
 
     public static int TimeOut { get => _timeOut; set => _timeOut = value; }
+    public static int Cooldown { get => _cooldown; set => _cooldown = value; }
 }
