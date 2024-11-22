@@ -20,7 +20,7 @@ public class Currency : MonoBehaviour
     }
     private void GetPlayerCurrency()
     {
-        StartCoroutine(SendToServer());
+        StartCoroutine(nameof(SendToServer));
     }
 
     private IEnumerator SendToServer()

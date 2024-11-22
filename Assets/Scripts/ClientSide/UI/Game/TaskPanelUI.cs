@@ -24,7 +24,7 @@ public class TaskPanelUI : MonoBehaviour
     {
         ClearListView();
         _inGameLoader.SetLoader(_loader);
-        _zeroTaskInformation.gameObject.SetActive(false);
+        
         InGameLoader.IsBorryActivate = false;
         Actions.OnStartLoad?.Invoke();       
         _task.GetTaskByTableName(DBTablesName.TasksTable, URLs.TaskSettings); 
@@ -116,6 +116,7 @@ public class TaskPanelUI : MonoBehaviour
 
     private void ClearListView()
     {
+        _zeroTaskInformation.gameObject.SetActive(false);
         foreach (Transform child in content)
         {
             Destroy(child.gameObject);

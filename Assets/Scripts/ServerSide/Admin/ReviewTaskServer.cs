@@ -37,7 +37,7 @@ public class ReviewTaskServer : MonoBehaviour
             _json = JsonHelper.fixJson(www.downloadHandler.text);
             UserTaskOnReview = JsonHelper.FromJson<UsersCompletedTasks>(_json);
             _taskOnReview.CompletedTaskPanel.SetActive(true);
-            _taskOnReview.SetTasksList();
+            _taskOnReview.SetTasksList(ListType.Tasks);
         }
     }
 

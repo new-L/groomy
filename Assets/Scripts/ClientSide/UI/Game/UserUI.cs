@@ -36,16 +36,19 @@ public class UserUI : MonoBehaviour
             _currencyNotificationAnimator.SetBool("Substract", true);
             _currencyNotification.text = "-" + Mathf.Abs(Currency.Gold - User.Currency.gold_count).ToString();
         }
-        else if(Currency.Gold < User.Currency.gold_count && !isSceneStart) //TODO: анимация плюса
+        else if (Currency.Gold < User.Currency.gold_count && !isSceneStart) //TODO: анимация плюса
         {
             _currencyNotification.gameObject.SetActive(true);
             _currencyNotificationAnimator.SetBool("Add", true);
             _currencyNotification.text = "+" + Mathf.Abs(Currency.Gold - User.Currency.gold_count).ToString();
         }
-        _currency.text = User.Currency.gold_count.ToString(); 
-        InGameLoader.Tables[DBTablesName.UserCurrency] = true;
-        InGameLoader.IsBorryActivate = true;
+        else if(isSceneStart)
+        {
+            InGameLoader.Tables[DBTablesName.UserCurrency] = true;
+            InGameLoader.IsBorryActivate = true;
+        }
         isSceneStart = false;
+        _currency.text = User.Currency.gold_count.ToString();
         Actions.OnUserDatasLoad?.Invoke();
     }
 
