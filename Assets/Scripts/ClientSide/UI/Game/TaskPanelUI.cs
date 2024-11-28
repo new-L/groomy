@@ -14,6 +14,8 @@ public class TaskPanelUI : MonoBehaviour
 
     [SerializeField] private TaskParse _task;
     [SerializeField] private UserCompletedTask _userCompletedTask;
+    [SerializeField] private TaskDetail _taskDetail;
+    [SerializeField] private TaskTypesButton _taskTypes;
 
     [Header("Loader")]
     [SerializeField] private InGameLoader _inGameLoader;
@@ -59,7 +61,7 @@ public class TaskPanelUI : MonoBehaviour
                 if (item.task_id == model.task_id)
                 {
                     var instance = GameObject.Instantiate(prefab.gameObject) as GameObject;
-                    instance.GetComponent<GameTaskPrefab>().TaskDeactivate(isTaskCompleted);
+                    instance.GetComponent<GameTaskPrefab>().IsCompletedTaskExist = isTaskCompleted;
                     instance.transform.SetParent(content, false);
                     InitializeItemView(instance.GetComponent<GameTaskPrefab>(), item);                    
                     break;
@@ -67,6 +69,7 @@ public class TaskPanelUI : MonoBehaviour
             }
             
         }
+        _taskTypes.ActivateButtons();
         Actions.OnUserDatasLoad?.Invoke();        
     }
     public void SetCompletedTasksList(string response)
@@ -98,9 +101,7 @@ public class TaskPanelUI : MonoBehaviour
     private bool isDailyTaskCompleted()
     {
         if (UserCompletedTask.CompletedTasks == null || UserCompletedTask.CompletedTasks.Length == 0)
-        {
             return false;
-        }
         foreach (var model in TaskParse.DailyTasks)
         {
             foreach (var item in UserCompletedTask.CompletedTasks)
@@ -127,10 +128,10 @@ public class TaskPanelUI : MonoBehaviour
     private void InitializeItemView(GameTaskPrefab viewGameObject, Tasks tasks)
     {
         viewGameObject.Title.text = tasks.title;
-        viewGameObject.Description.text = tasks.description;
         viewGameObject.RewardCount.text = "+"+tasks.reward.ToString();
-        viewGameObject.TaskID.text = "#"+tasks.task_id.ToString();
-        viewGameObject.UserCompletedTask = _userCompletedTask;
+        viewGameObject.Task = tasks;
+        viewGameObject.Description.text = tasks.description;
+        viewGameObject.TaskDetail = _taskDetail;
     }
 
     private void OnEnable()
