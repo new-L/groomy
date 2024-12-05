@@ -13,6 +13,8 @@ public class Loader : MonoBehaviour
     public static Dictionary<string, bool> LoadedTables { get => _loadedTables; set => _loadedTables = value; }
     public static bool IsLoadComplete { get => isLoadComplete; set => isLoadComplete = value; }
 
+
+
     private void FixedUpdate()
     {
         if (Loader.IsLoadComplete && !Loader.LoadedTables.ContainsValue(false))

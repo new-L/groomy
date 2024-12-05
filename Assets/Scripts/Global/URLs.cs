@@ -6,8 +6,8 @@ public class URLs
     private static string _authorization = "https://unnamedplace.ru/dbhelper/authorization.php";
     private static string _userCurrency = "https://unnamedplace.ru/dbhelper/usercurrency.php";
 
-    public static string Authorization { get => _authorization; set => _authorization = value; }
-    public static string UserCurrency { get => _userCurrency; set => _userCurrency = value; }
+    public static string Authorization { get => _authorization; }
+    public static string UserCurrency { get => _userCurrency; }
 
     #endregion
 
@@ -29,17 +29,23 @@ public class URLs
     #endregion
 
     #region Get/Set
-    public static string TaskSettings { get => _taskSettings; set => _taskSettings = value; }
-    public static string NewTask { get => _newTask; set => _newTask = value; }
-    public static string UpdateTask { get => _updateTask; set => _updateTask = value; }
-    public static string DeleteTask { get => _deleteTask; set => _deleteTask = value; }
-    public static string ScheduleTask { get => _scheduleTask; set => _scheduleTask = value; }
-    public static string DeScheduleTask { get => _deScheduleTask; set => _deScheduleTask = value; }
-    public static string Users { get => _users; set => _users = value; }
-    public static string DailyTask { get => _dailyTask; set => _dailyTask = value; }
-    public static string UserCompletedTask { get => _userCompletedTask; set => _userCompletedTask = value; }
-    public static string TaskOnReview { get => _taskOnReview; set => _taskOnReview = value; }
+    public static string TaskSettings { get => _taskSettings; }
+    public static string NewTask { get => _newTask; }
+    public static string UpdateTask { get => _updateTask; }
+    public static string DeleteTask { get => _deleteTask; }
+    public static string ScheduleTask { get => _scheduleTask; }
+    public static string DeScheduleTask { get => _deScheduleTask; }
+    public static string Users { get => _users; }
+    public static string DailyTask { get => _dailyTask; }
+    public static string UserCompletedTask { get => _userCompletedTask; }
+    public static string TaskOnReview { get => _taskOnReview; }
+    
     #endregion
 
+    #endregion
+
+    #region RhytmMiniGame
+    private static string _melodiesList = "https://unnamedplace.ru/dbhelper/getmelodies.php";
+    public static string MelodiesList { get => _melodiesList; }
     #endregion
 }
