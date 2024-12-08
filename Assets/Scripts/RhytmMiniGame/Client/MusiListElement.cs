@@ -24,33 +24,34 @@ public class MusiListElement : MonoBehaviour
     }
 
     public void StartPlay()
-    {        
-        if (Music.LoadedOGGFiles.ContainsKey(_melody.id))
-        {
-            if (Music.LoadedMIDIFiles.ContainsKey(_melody.id))
-            {
-                _songManager.SettingsSetup(_melody);
-                Debug.Log("Уже есть!");
-            }
-            else
-            {
-                if (Music.LoadedOGGFiles.Remove(_melody.id))
-                {
-                    _music.DownloadMelody(_melody);
-                    return;
-                }
-            }
-        }
-        else
-        {
-            if (Music.LoadedMIDIFiles.Remove(_melody.id))
-            {
-                _music.DownloadMelody(_melody);
-                return;
-            }
-            Debug.Log("Не было!");
-            _music.DownloadMelody(_melody);
-        }
+    {
+        _music.DownloadPreview(_melody);
+        //if (Music.LoadedOGGFiles.ContainsKey(_melody.id))
+        //{
+        //    if (Music.LoadedMIDIFiles.ContainsKey(_melody.id))
+        //    {
+        //        _songManager.SettingsSetup(_melody);
+        //        Debug.Log("Уже есть!");
+        //    }
+        //    else
+        //    {
+        //        if (Music.LoadedOGGFiles.Remove(_melody.id))
+        //        {
+        //            _music.DownloadMelody(_melody);
+        //            return;
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    if (Music.LoadedMIDIFiles.Remove(_melody.id))
+        //    {
+        //        _music.DownloadMelody(_melody);
+        //        return;
+        //    }
+        //    Debug.Log("Не было!");
+        //    _music.DownloadMelody(_melody);
+        //}
 
     }
 

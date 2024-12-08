@@ -1,11 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
-using System.IO;
-using UnityEngine.Networking;
-using System;
 using UnityEngine.Events;
 
 public class SongManager : MonoBehaviour
@@ -16,16 +11,19 @@ public class SongManager : MonoBehaviour
     public float songDelayInSeconds;
     public double marginOfError; // in seconds
 
-    public int inputDelayInMilliseconds;
+    public float inputDelayInMilliseconds;
     
-
-    public string fileLocation;
     public float noteTime;
     public float noteSpawnY;
     public float noteTapY;
 
 
     public UnityEvent _datasDownload;
+
+    [SerializeField] private EndGame _endGame;
+    private int _totalNotes;
+    private Melody _melody;    
+    private static DifficultLevel _difficultLevel = DifficultLevel.Low;
     public float noteDespawnY
     {
         get
@@ -34,7 +32,10 @@ public class SongManager : MonoBehaviour
         }
     }
 
+    public static DifficultLevel DifficultLevel { get => _difficultLevel; set => _difficultLevel = value; }
+
     public static MidiFile midiFile;
+
 
     private void Start()
     {
@@ -43,6 +44,7 @@ public class SongManager : MonoBehaviour
 
     public void SettingsSetup(Melody melody)
     {
+        _melody = melody;
         audioSource.clip = Music.LoadedOGGFiles[melody.id];
         midiFile = Music.LoadedMIDIFiles[melody.id];
         GetDataFromMidi();
@@ -59,6 +61,7 @@ public class SongManager : MonoBehaviour
     {
             var notes = midiFile.GetNotes();
         var array = new Melanchall.DryWetMidi.Interaction.Note[notes.Count];
+        _totalNotes = notes.Count;
         notes.CopyTo(array, 0);
 
         foreach (var lane in lanes)
@@ -68,11 +71,16 @@ public class SongManager : MonoBehaviour
             lane.gameObject.SetActive(true);
         }
 
-        Invoke(nameof(StartSong), 0f);
+        Invoke(nameof(StartSong), inputDelayInMilliseconds);
     }
     
     public static double GetAudioSourceTime()
     {
         return (double)Instance.audioSource.timeSamples / Instance.audioSource.clip.frequency;
+    }
+
+    public void EndSong()
+    {
+        _endGame.RewardCalculation(_totalNotes, _melody);
     }
 }

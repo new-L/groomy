@@ -2,7 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,17 +15,16 @@ public class Lane : MonoBehaviour
     public GameObject notePrefab;
     public List<Note> notes = new List<Note>();
     public List<double> timeStamps = new List<double>();
+    
 
     int spawnIndex = 0;
     int inputIndex = 0;
 
-    public bool isReloadNeeded = false;
+    [SerializeField] private bool _isPressed = false;
+    [SerializeField] private bool _isLastElement = false;
+    [SerializeField] private bool _isFirstElement = false;
+    [SerializeField] private SongManager _songManager;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     public void Clear()
     {
@@ -33,12 +34,14 @@ public class Lane : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        _isLastElement = false;
+        _isFirstElement = false;
         notes = new List<Note>();
         timeStamps = new List<double>();
         spawnIndex = 0;
-        inputIndex = 0;        
+        inputIndex = 0;
     }
-    
+
     public void SetTimeStamps(Melanchall.DryWetMidi.Interaction.Note[] array)
     {
         foreach (var note in array)
@@ -47,22 +50,34 @@ public class Lane : MonoBehaviour
             {
                 var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, SongManager.midiFile.GetTempoMap());
                 timeStamps.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
+                if (note == array.Last()) _isLastElement = true;
+                if (note == array.First()) _isFirstElement = true;
             }
+            
         }
+        
     }
-    // Update is called once per frame
+    public void Pressed()
+    {
+        _isPressed = !_isPressed;
+    }
     void Update()
     {
-            if (spawnIndex < timeStamps.Count)
+        if (spawnIndex < timeStamps.Count)
+        {
+            if (SongManager.GetAudioSourceTime() >= timeStamps[spawnIndex] - 3f && spawnIndex == 0 && _isFirstElement)
             {
-                if (SongManager.GetAudioSourceTime() >= timeStamps[spawnIndex] - SongManager.Instance.noteTime)
-                {
-                    var note = Instantiate(notePrefab, transform);
-                    notes.Add(note.GetComponent<Note>());
-                    note.GetComponent<Note>().assignedTime = (float)timeStamps[spawnIndex];
-                    spawnIndex++;
-                }
+                Debug.Log("Ready?");
+                _isFirstElement = false;
             }
+            if (SongManager.GetAudioSourceTime() >= timeStamps[spawnIndex] - SongManager.Instance.noteTime)
+            {
+                var note = Instantiate(notePrefab, transform);
+                notes.Add(note.GetComponent<Note>());
+                note.GetComponent<Note>().assignedTime = (float)timeStamps[spawnIndex];
+                spawnIndex++;
+            } 
+        }
 
             if (inputIndex < timeStamps.Count)
             {
@@ -70,31 +85,37 @@ public class Lane : MonoBehaviour
                 double marginOfError = SongManager.Instance.marginOfError;
                 double audioTime = SongManager.GetAudioSourceTime() - (SongManager.Instance.inputDelayInMilliseconds / 1000.0);
 
-                if (Input.GetKeyDown(input))
+                if (Input.GetKeyDown(input) || _isPressed)
                 {
-                    Debug.Log(Math.Abs(audioTime - timeStamp));
+                    _isPressed = !_isPressed;
                     if (Math.Abs(audioTime - timeStamp) < marginOfError)
                     {
                         Hit();
-                        print($"Hit on {inputIndex} note");
+                        //print($"Hit on {inputIndex} note");
                         Destroy(notes[inputIndex].gameObject);
                         inputIndex++;
                     }
                     else
                     {
-                        print($"Hit inaccurate on {inputIndex} note with {Math.Abs(audioTime - timeStamp)} delay");
+                        //print($"Hit inaccurate on {inputIndex} note with {Math.Abs(audioTime - timeStamp)} delay");
                     }
                 }
                 if (timeStamp + marginOfError <= audioTime)
                 {
                     Miss();
-                    print($"Missed {inputIndex} note");
+                    //print($"Missed {inputIndex} note");
                     inputIndex++;
                 }
-
+            
             }
-            Debug.Log("We say bum bum,!");
+        if (inputIndex == timeStamps.Count && _isLastElement)
+        {
+            _songManager.EndSong();
+            _isLastElement = false;
         }
+    }
+
+    
     private void Hit()
     {
         ScoreManager.Hit();
