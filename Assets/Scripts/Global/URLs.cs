@@ -1,13 +1,16 @@
-using UnityEngine;
-using System;
+
 public class URLs
 {
     #region UsersURLs
     private static string _authorization = "https://unnamedplace.ru/dbhelper/authorization.php";
     private static string _userCurrency = "https://unnamedplace.ru/dbhelper/usercurrency.php";
+    private static string _rating = "https://unnamedplace.ru/dbhelper/ratings.php";
+    private static string _tutorial = "https://unnamedplace.ru/dbhelper/tutorials.php";
 
     public static string Authorization { get => _authorization; }
     public static string UserCurrency { get => _userCurrency; }
+    public static string UserRating { get => _rating; }
+    public static string Tutorial { get => _tutorial; }
 
     #endregion
 

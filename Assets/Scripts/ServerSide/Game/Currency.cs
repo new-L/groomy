@@ -1,8 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -12,9 +9,14 @@ public class Currency : MonoBehaviour
     #region UI
     [SerializeField] private UserUI _currencyUI;
     #endregion
-    private static int gold;
+    [SerializeField] private EndGame _endGame;
 
-    public static int Gold { get => gold; set => gold = value; }
+    private static int _gold;
+    private int _count;
+    private bool _isSended;
+
+    public static int Gold { get => _gold; set => _gold = value; }
+    public bool IsSended { get => _isSended; }
 
     private void Start()
     {
@@ -28,6 +30,7 @@ public class Currency : MonoBehaviour
 
     public void Add(int count)
     {
+        _isSended = false;
         StartCoroutine(AddCurrency("add", count));
     }
 
@@ -50,19 +53,19 @@ public class Currency : MonoBehaviour
         }
         else
         {
-            Debug.Log(www.downloadHandler.text);
-            if(User.Currency != null) gold = User.Currency.gold_count;
+            if(User.Currency != null) _gold = User.Currency.gold_count;
             User.Currency = JsonUtility.FromJson<PlayerCurrency>(www.downloadHandler.text);
             _currencyUI.SetUpCurrencyValue();
-            StartCoroutine(nameof(Waiter));
+            StartCoroutine(Waiter("get"));
         }
     }
 
     private IEnumerator AddCurrency(string request, int count)
     {
         StopCoroutine(nameof(Waiter));
+        _count = count;
         WWWForm form = new WWWForm();
-        form.AddField("user_id", 406788);//User.Player.user_id);
+        form.AddField("user_id", User.Player.user_id);
         form.AddField("request_type", request);
         if (request.Equals("add")) form.AddField("count", count);
         UnityWebRequest www = UnityWebRequest.Post(URLs.UserCurrency, form);
@@ -73,16 +76,19 @@ public class Currency : MonoBehaviour
         if (www.error != null)
         {
             Debug.Log("Не удалось связаться с сервером!");
-            StartCoroutine(nameof(Waiter));
+            StartCoroutine(Waiter("add"));
             yield break;
         }
+        _isSended = true;
+        _endGame?.OnDatasSended?.Invoke();
     }
 
-    private IEnumerator Waiter()
+    private IEnumerator Waiter(string request)
     {
         Debug.Log("Waiter is working!");
         yield return new WaitForSecondsRealtime(ServerSettings.Cooldown);
-        StartCoroutine(SendToServer("get"));
+        if(request.Equals("get"))StartCoroutine(SendToServer(request));
+        else if(request.Equals("add")) StartCoroutine(AddCurrency(request, _count));
         Debug.Log("AFTER " + ServerSettings.Cooldown + " seconds waiter is working!");
     }
 

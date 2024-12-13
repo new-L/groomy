@@ -49,6 +49,7 @@ public class TaskPanelUI : MonoBehaviour
         {
             _zeroTaskInformation.text = "Задач нет!";
             _zeroTaskInformation.gameObject.SetActive(true);
+            _taskTypes.ActivateButtons();
             Actions.OnUserDatasLoad?.Invoke();            
             return; 
         }

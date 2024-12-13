@@ -13,5 +13,6 @@ enum ScenesIndex
 {
     Authorization = 0,
     UserScene = 1,
-    AdminScene = 2
+    AdminScene = 2,
+    RhytmGameScene = 3,
 }

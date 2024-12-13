@@ -7,14 +7,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.Networking;
+using System.Collections.ObjectModel;
 
 public class Music : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private MusicList _list;
     [SerializeField] private SongManager _songManager;
-    private static Dictionary<int, AudioClip> _loadedOGGFiles = new Dictionary<int, AudioClip>();
-    private static Dictionary<int, MidiFile> _loadedMIDIFiles = new Dictionary<int, MidiFile>();
+    private Dictionary<int, AudioClip> _loadedOGGFiles = new Dictionary<int, AudioClip>();
+    private Dictionary<int, AudioClip> _loadedPreviewFiles = new Dictionary<int, AudioClip>();
+    private Dictionary<int, MidiFile> _loadedMIDIFiles = new Dictionary<int, MidiFile>();
 
     private Melody[] _melodies;
     private UnityWebRequest _www;
@@ -31,18 +33,27 @@ public class Music : MonoBehaviour
     private MidiFile _midiFile;
     public Melody[] Melodies { get => _melodies; }
     public byte[] Result { get => _result; set => _result = value; }
-    public static Dictionary<int, AudioClip> LoadedOGGFiles { get => _loadedOGGFiles; set => _loadedOGGFiles = value; }
-    public static Dictionary<int, MidiFile> LoadedMIDIFiles { get => _loadedMIDIFiles; set => _loadedMIDIFiles = value; }
+    public Dictionary<int, AudioClip> LoadedOGGFiles { get => _loadedOGGFiles; set => _loadedOGGFiles = value; }
+    public Dictionary<int, MidiFile> LoadedMIDIFiles { get => _loadedMIDIFiles; set => _loadedMIDIFiles = value; }
+    public Dictionary<int, AudioClip> LoadedPreviewFiles { get => _loadedPreviewFiles; set => _loadedPreviewFiles = value; }
     #endregion
 
 
-    private void Start()
+
+
+    public void StartAfterTutorial()
     {
         LoadedOGGFiles.Clear();
         LoadedMIDIFiles.Clear();
+        StartScene();
+    }
+
+    public void StartScene()
+    {
         Actions.OnStartLoad?.Invoke();
         StartCoroutine(DownloadMusicList());
     }
+
     public void DownloadMelody(Melody melody)
     {
         Actions.OnStartLoad?.Invoke();
@@ -66,6 +77,7 @@ public class Music : MonoBehaviour
         Debug.Log(_json);
         _melodies = JsonHelper.FromJson<Melody>(_json);
         if (_melodies != null) _list.SetUpList();
+        else Actions.OnListCreated?.Invoke();
     }
 
 
@@ -92,8 +104,15 @@ public class Music : MonoBehaviour
 
     private IEnumerator DownloadMelodyOGG(Melody melody)
     {
-        _www = UnityWebRequestMultimedia.GetAudioClip(melody.ogg_url, AudioType.OGGVORBIS);
-        yield return _www.SendWebRequest();
+        if (SystemInfo.operatingSystem.ToLower().Contains("iphone") || SystemInfo.operatingSystem.ToLower().Contains("ios"))
+        {
+            _www = UnityWebRequestMultimedia.GetAudioClip(URL_Substring(melody.ogg_url, "aac"), AudioType.AUDIOQUEUE);
+        }
+        else
+        {
+            _www = UnityWebRequestMultimedia.GetAudioClip(URL_Substring(melody.ogg_url, "mp3"), AudioType.MPEG);
+        }
+            yield return _www.SendWebRequest();
         if (_www.isNetworkError || _www.isHttpError)
         {
             Debug.LogError(_www.error);
@@ -103,8 +122,6 @@ public class Music : MonoBehaviour
             _audioSource.clip = DownloadHandlerAudioClip.GetContent(_www) as AudioClip;
             LoadedOGGFiles.Add(melody.id, _audioSource.clip);
             StartCoroutine(ReadMIDIFromSite(melody));
-            //_audioSource.clip = DownloadHandlerAudioClip.GetContent(_www);
-            //_audioSource.Play();
         }
     }
 
@@ -120,7 +137,24 @@ public class Music : MonoBehaviour
         {
             _texture = ((DownloadHandlerTexture)_www.downloadHandler).texture;
             _sprite = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), new Vector2());
-            _www = UnityWebRequestMultimedia.GetAudioClip(melody.preview_ogg_url, AudioType.OGGVORBIS);
+
+            if (LoadedPreviewFiles.ContainsKey(melody.id)) 
+            {
+                foreach (var item in LoadedPreviewFiles)
+                {
+                    if (item.Key == melody.id) { _list.SetUpPreview(_sprite, item.Value, melody); break; }
+                }
+                StopCoroutine(nameof(DownloadPreviewFromServer));
+                yield break; 
+            }
+            if (SystemInfo.operatingSystem.ToLower().Contains("iphone") || SystemInfo.operatingSystem.ToLower().Contains("ios"))
+            {
+                _www = UnityWebRequestMultimedia.GetAudioClip(URL_Substring(melody.preview_ogg_url, "aac"), AudioType.AUDIOQUEUE);
+            }
+            else
+            {
+                _www = UnityWebRequestMultimedia.GetAudioClip(URL_Substring(melody.preview_ogg_url, "mp3"), AudioType.MPEG);
+            }
             yield return _www.SendWebRequest();
             if (_www.isNetworkError || _www.isHttpError)
             {
@@ -141,6 +175,11 @@ public class Music : MonoBehaviour
         LoadedMIDIFiles.Clear();
     }
 
+
+    private string URL_Substring(string url, string type)
+    {
+        return url.Substring(0, url.Length-3) + type;
+    }
 }
 
 [Serializable]

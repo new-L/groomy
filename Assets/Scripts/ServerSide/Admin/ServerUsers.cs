@@ -27,7 +27,7 @@ public class ServerUsers : MonoBehaviour
         Actions.OnStartLoad?.Invoke();
         foreach (var item in _tablesNames)
         {
-            //Loader.LoadedTables.Add(item, false);
+            //Loader.LoadedTables.Counting(item, false);
             //if (item.Equals(_tablesNames.Last())) GetList(item, true);
             //else GetList(item, false);
         }

@@ -26,6 +26,7 @@ public class InGameLoader : MonoBehaviour
     private void Start()
     {
         Actions.OnStartLoad?.Invoke();
+        _borry.SetActive(false);
         IsBorryActivate = false;
     }
 

@@ -7,9 +7,11 @@ public class User
 {
     private static Player _player;
     private static PlayerCurrency _currency;
+    private PlayerRating _rating;
 
     public static Player Player { get => _player; set => _player = value; }
     public static PlayerCurrency Currency { get => _currency; set => _currency = value; }
+    public PlayerRating Rating { get => _rating; set => _rating = value; }
 }
 
 [Serializable]
@@ -26,3 +28,8 @@ public class PlayerCurrency
     public int gold_count = 0;
 }
 
+[Serializable]
+public class PlayerRating
+{
+    public int rating_count;
+}
