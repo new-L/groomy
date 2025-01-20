@@ -39,7 +39,7 @@ public class ScoreManager : MonoBehaviour
     public void Miss()
     {
         _isHitted = false;
-        _comboScore -= CheckScoreUnderNull(2);
+        _comboScore -= CheckScoreUnderNull(1);
         SetScoreText();
     }
     private void Animation()

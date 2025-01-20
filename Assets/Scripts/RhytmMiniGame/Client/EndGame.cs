@@ -64,6 +64,7 @@ public class EndGame : MonoBehaviour
             _statusText.text = "Поражение";
             _statusText.color = new Color32(255, 33, 46, 255);
             _coinsRewardText.text = "0";
+            _userCurrency.IsSended = true;
             RatingRewardCalculation(RequestType.Subtract);
         }
         else

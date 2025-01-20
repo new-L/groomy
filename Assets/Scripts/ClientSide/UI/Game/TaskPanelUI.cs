@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +16,8 @@ public class TaskPanelUI : MonoBehaviour
     [SerializeField] private TaskParse _task;
     [SerializeField] private UserCompletedTask _userCompletedTask;
     [SerializeField] private TaskDetail _taskDetail;
-    [SerializeField] private TaskTypesButton _taskTypes;
+    [SerializeField] private TypesButton _taskTypes;
+    [SerializeField] private List<Button> _typeButtons;
 
     [Header("Loader")]
     [SerializeField] private InGameLoader _inGameLoader;
@@ -26,7 +28,8 @@ public class TaskPanelUI : MonoBehaviour
     {
         ClearListView();
         _inGameLoader.SetLoader(_loader);
-        
+        _taskTypes.TypeButtons = _typeButtons;
+        _taskTypes.PATH = "Art/UI/";
         InGameLoader.IsBorryActivate = false;
         Actions.OnStartLoad?.Invoke();       
         _task.GetTaskByTableName(DBTablesName.TasksTable, URLs.TaskSettings); 

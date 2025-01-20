@@ -23,6 +23,10 @@ public class Lane : MonoBehaviour
     [SerializeField] private SongManager _songManager;
     [SerializeField] private ScoreManager _scoreManager;
     [SerializeField] private UnityEvent OnFirstNoteReeady;
+    [SerializeField] private AudioSource _hit;
+    [SerializeField] private AudioSource _miss;
+    [SerializeField] private SpriteRenderer _laneEffect;
+    [SerializeField] private List<Sprite> _laneEffects;
 
 
     public void Clear()
@@ -87,7 +91,7 @@ public class Lane : MonoBehaviour
 
                 if (Input.GetKeyDown(input) || _isPressed)
                 {
-                    _isPressed = !_isPressed;
+                    Pressed();
                     if (Math.Abs(audioTime - timeStamp) < marginOfError)
                     {
                         Hit();
@@ -97,8 +101,9 @@ public class Lane : MonoBehaviour
                     }
                     else
                     {
-                        //print($"Hit inaccurate on {inputIndex} note with {Math.Abs(audioTime - timeStamp)} delay");
-                    }
+                    //Paint(58, 58, 58, 255);
+                    //print($"Hit inaccurate on {inputIndex} note with {Math.Abs(audioTime - timeStamp)} delay");
+                }
                 }
                 if (timeStamp + marginOfError <= audioTime)
                 {
@@ -119,9 +124,22 @@ public class Lane : MonoBehaviour
     private void Hit()
     {
         _scoreManager.Hit();
+        _hit.Play();
+        Paint(0, 221, 22, 185);
     }
     private void Miss()
     {
         _scoreManager.Miss();
+        if (!_hit.isPlaying) _miss.Play();
+        _laneEffect.gameObject.GetComponent<Animator>().StopPlayback();
+        _laneEffect.gameObject.GetComponent<Animator>().Play("HitOut");
+        Paint(222, 0, 0, 185);
+    }
+
+    private void Paint(byte r, byte g, byte b, byte a)
+    {
+        _laneEffect.sprite = _laneEffects[UnityEngine.Random.Range(0, _laneEffects.Count - 1)];
+        _laneEffect.gameObject.SetActive(true);
+        _laneEffect.color = new Color32(r, g, b, a);
     }
 }

@@ -16,7 +16,7 @@ public class Currency : MonoBehaviour
     private bool _isSended;
 
     public static int Gold { get => _gold; set => _gold = value; }
-    public bool IsSended { get => _isSended; }
+    public bool IsSended { get => _isSended; set => _isSended = true; }
 
     private void Start()
     {

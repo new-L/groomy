@@ -2,6 +2,7 @@
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using UnityEngine.Events;
+using TMPro;
 
 public class SongManager : MonoBehaviour
 {
@@ -25,7 +26,6 @@ public class SongManager : MonoBehaviour
     private Melody _melody;
     private int _totalNotes;
     private static DifficultLevel _difficultLevel = DifficultLevel.Low;
-
 
     public UnityEvent _datasDownload;
 
