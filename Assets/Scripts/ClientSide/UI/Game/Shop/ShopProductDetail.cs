@@ -9,14 +9,22 @@ public class ShopProductDetail : MonoBehaviour
     [SerializeField] private Image _icon;
     [SerializeField] private TMP_Text _title;
     [SerializeField] private TMP_Text _price;
+    [SerializeField] private ProductDetailPanel _detailPanel;
 
-    private int _productID;
+    private ShopProduct _product;
 
-    public void SetDetail(ShopProduct product)
+    public void SetDetail(ShopProduct product, ProductDetailPanel _productPanel)
     {
-        _productID = product.product_id;
+        _product = product;
         _icon.sprite = product.icon;
         _title.text = product.title;
         _price.text = product.price.ToString();
+        _detailPanel = _productPanel;
     }
+
+    public void OnItemClick()
+    {
+        _detailPanel.OnProductClick(_product);
+    }
+
 }

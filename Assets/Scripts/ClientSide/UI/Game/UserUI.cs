@@ -29,7 +29,7 @@ public class UserUI : MonoBehaviour
     public void SetUpCurrencyValue()
     { 
         NotificationReset();
-        _inGameLoader.SetLoader(_loader);
+        //_inGameLoader.SetLoader(_loader);
         if (Currency.Gold > User.Currency.gold_count && !isSceneStart) //TODO: анимация минуса
         {
             _currencyNotification.gameObject.SetActive(true);
@@ -39,7 +39,7 @@ public class UserUI : MonoBehaviour
         else if (Currency.Gold < User.Currency.gold_count && !isSceneStart) //TODO: анимация плюса
         {
             _currencyNotification.gameObject.SetActive(true);
-            _currencyNotificationAnimator.SetBool("Counting", true);
+            _currencyNotificationAnimator.SetBool("Add", true);
             _currencyNotification.text = "+" + Mathf.Abs(Currency.Gold - User.Currency.gold_count).ToString();
         }
         else if(isSceneStart)
@@ -54,7 +54,7 @@ public class UserUI : MonoBehaviour
 
     public void NotificationReset()
     {
-        _currencyNotificationAnimator.SetBool("Counting", false);
+        _currencyNotificationAnimator.SetBool("Add", false);
         _currencyNotificationAnimator.SetBool("Substract", false);
         _currencyNotification.gameObject.SetActive(false);
     }

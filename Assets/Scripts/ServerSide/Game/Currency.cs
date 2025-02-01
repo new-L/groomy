@@ -23,7 +23,7 @@ public class Currency : MonoBehaviour
         if(SceneManager.GetActiveScene().buildIndex == 1)
             GetPlayerCurrency();
     }
-    private void GetPlayerCurrency()
+    public void GetPlayerCurrency()
     {
         StartCoroutine(SendToServer("get"));
     }

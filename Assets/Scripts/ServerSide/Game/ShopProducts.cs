@@ -13,9 +13,13 @@ public class ShopProducts : MonoBehaviour
 
 
     [SerializeField] private ShopProduct[] _products;
+    [SerializeField] private Notification _notification;
 
     [SerializeField] private UnityEvent _onProductsLoad;
     [SerializeField] private UnityEvent _onIconsLoad;
+    [SerializeField] private UnityEvent _onProductCountLoad;
+    [SerializeField] private UnityEvent _onProductPurchased;
+    [SerializeField] private UnityEvent _onPurchaseBreak;
 
     private WWWForm _form;
     public ShopProduct[] Products { get => _products; }
@@ -25,12 +29,21 @@ public class ShopProducts : MonoBehaviour
         StartCoroutine(GetProducts(type));
     }
 
-    public void BuyProduct()
+    public void BuyProduct(int ID)
     {
-        StartCoroutine(PostOrder());
+        StartCoroutine(PostOrder(ID));
     }
 
+    public void LoadProductCount(int productID)
+    {
+        StartCoroutine(GetProductCountByID(productID));
+    }
     
+    public void StopLoadProductCount()
+    {
+        StopCoroutine(nameof(GetProductCountByID));
+        StopCoroutine(nameof(Waiter));
+    }
 
     public void LoadProductIcons()
     {
@@ -58,10 +71,11 @@ public class ShopProducts : MonoBehaviour
         _onProductsLoad?.Invoke();
     }
 
-    private IEnumerator PostOrder()
+    private IEnumerator PostOrder(int ID)
     {
+        StopCoroutine(nameof(Waiter));
         _form = new WWWForm();
-        _form.AddField("product_id", "");
+        _form.AddField("product_id", ID);
         _form.AddField("user_id", User.Player.user_id);
         _form.AddField("response_type", "update");
         UnityWebRequest www = UnityWebRequest.Post(_url.ShopProduct, _form);
@@ -70,7 +84,14 @@ public class ShopProducts : MonoBehaviour
 
         yield return www.SendWebRequest();
         if (www.error != null) { Debug.Log("Не удалось связаться с сервером!"); yield break; }
-
+        else
+        {
+            string _text = www.downloadHandler.text.ToString();
+            print(_text);
+            if (_text.Contains("{gold_error}")) { _notification.NotificationIn("Недостаточно монет!"); _onPurchaseBreak?.Invoke(); }
+            else if (_text.Contains("{product_error}")) { _notification.NotificationIn("Товар закончился!"); _onPurchaseBreak?.Invoke(); }
+            else _onProductPurchased?.Invoke();
+        }
     }
 
     private IEnumerator GetProductIcons()
@@ -90,6 +111,40 @@ public class ShopProducts : MonoBehaviour
             }
         }
         _onIconsLoad?.Invoke();
+    }
+
+    private IEnumerator GetProductCountByID(int productID)
+    {
+        StopCoroutine(nameof(Waiter));
+        _form = new WWWForm();
+        _form.AddField("response_type", "getcount");
+        _form.AddField("productID", productID);
+        UnityWebRequest www = UnityWebRequest.Post(_url.ShopProduct, _form);
+
+        www.timeout = ServerSettings.TimeOut;
+
+        yield return www.SendWebRequest();
+        if (www.error != null) { Debug.Log("Не удалось связаться с сервером!"); StartCoroutine(Waiter("getcount", productID)); yield break; }
+        else
+        {
+            foreach (var item in _products)
+            {
+                if (item.product_id == productID)
+                {
+                    item.count = Int32.Parse(www.downloadHandler.text);
+                    StartCoroutine(Waiter("getcount", productID));
+                    _onProductCountLoad?.Invoke();
+                    break;
+                }
+            }
+        }
+    }
+
+
+    private IEnumerator Waiter(string request, int ID)
+    {
+        yield return new WaitForSecondsRealtime(ServerSettings.Cooldown / 2);
+        if (request.Equals("getcount")) StartCoroutine(GetProductCountByID(ID));
     }
 
     private void OnDisable()

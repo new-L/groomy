@@ -23,6 +23,9 @@ public class ShopPanel : MonoBehaviour
     [Header("Server")]
     [SerializeField] private ShopProducts _shop;
 
+    [Header("ProductDetailPanel")]
+    [SerializeField] private ProductDetailPanel _detailPanel;
+
     private string _productType = "real";
 
     public string ProductType { get => _productType; set => _productType = value; }
@@ -41,7 +44,7 @@ public class ShopPanel : MonoBehaviour
     {
         if (_shop.Products.Length == 0 || _shop.Products == null)
         {
-            Actions.OnUserDatasLoad?.Invoke();
+            Actions.OnListCreated?.Invoke();
             _typesButton.ActivateButtons();
             return;
         }
@@ -51,12 +54,12 @@ public class ShopPanel : MonoBehaviour
             if (item.type.Equals(_productType))
             {
                 var instance = GameObject.Instantiate(_prefab.gameObject) as GameObject;
-                instance.GetComponent<ShopProductDetail>().SetDetail(item);
+                instance.GetComponent<ShopProductDetail>().SetDetail(item, _detailPanel);
                 instance.transform.SetParent(_content, false);
             }
         }
         _typesButton.ActivateButtons();
-        Actions.OnUserDatasLoad?.Invoke();
+        Actions.OnListCreated?.Invoke();
     }
 
     private void ClearListView()
