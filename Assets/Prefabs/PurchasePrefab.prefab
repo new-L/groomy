@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7578601757160658906}
   - component: {fileID: 2419002859728550832}
   m_Layer: 5
-  m_Name: ProductPrefab
+  m_Name: PurchasePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5fdd6ebf6c195434bab1d1b34afe38ac, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 46bbdd66ba3cac041bc3b05cd9de8dbd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -139,19 +139,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5697891410709161744}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7578601757160658906}
-        m_TargetAssemblyTypeName: ShopProductDetail, Assembly-CSharp
-        m_MethodName: OnItemClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &934954956886450098
 GameObject:
   m_ObjectHideFlags: 0
@@ -169,7 +157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2943247890311601753
 RectTransform:
   m_ObjectHideFlags: 0
@@ -301,7 +289,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &164904589542657754
 RectTransform:
   m_ObjectHideFlags: 0
@@ -355,10 +343,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 72916263691520070}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.05357143, y: 0.25784215}
-  m_AnchorMax: {x: 0.9541035, y: 0.4211316}
-  m_AnchoredPosition: {x: -1, y: 2.0799942}
-  m_SizeDelta: {x: -20.58, y: -5.55}
+  m_AnchorMin: {x: 0.05357143, y: 0.15576768}
+  m_AnchorMax: {x: 0.9292326, y: 0.36910555}
+  m_AnchoredPosition: {x: 2.076088, y: -1.199997}
+  m_SizeDelta: {x: -14.58, y: -2.1133995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6231729380295649893
 CanvasRenderer:
@@ -549,7 +537,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1234795611543592881
 RectTransform:
   m_ObjectHideFlags: 0

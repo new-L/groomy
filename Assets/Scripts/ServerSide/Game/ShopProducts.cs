@@ -24,35 +24,34 @@ public class ShopProducts : MonoBehaviour
     private WWWForm _form;
     public ShopProduct[] Products { get => _products; }
 
+    //Методы для для взаимодействия с внешними скриптами
+    //Загрузка всех товаров определенного типа
     public void DownloadProducts(string type)
     {
         StartCoroutine(GetProducts(type));
     }
-
+    //Покупка товара
     public void BuyProduct(int ID)
     {
         StartCoroutine(PostOrder(ID));
     }
-
+    //Загрузка кол-во продукта (загружается по кулдауну во время активной панели конкретного айтема
     public void LoadProductCount(int productID)
     {
         StartCoroutine(GetProductCountByID(productID));
     }
-    
-    public void StopLoadProductCount()
-    {
-        StopCoroutine(nameof(GetProductCountByID));
-        StopCoroutine(nameof(Waiter));
-    }
-
+    //Загрузка спрайтов продуктов
     public void LoadProductIcons()
     {
-        StartCoroutine(GetProductIcons());
+        StartCoroutine(GetProductIcons(Products));
     }
-    public void StopCoroutines()
+    public void LoadPurchasesIcons(ShopProduct[] purchases)
     {
-        this.StopAllCoroutines();
+        StartCoroutine(GetProductIcons(purchases));
     }
+
+    //Запросы на сервер
+    //Подтягиваем все продукты определенного типа. По умолчания - существующие в реальности
     private IEnumerator GetProducts(string type = "real")
     {
         Debug.Log("{GetProducts}: Запрашиваем данные у таблицы");
@@ -65,12 +64,11 @@ public class ShopProducts : MonoBehaviour
 
         yield return www.SendWebRequest();
         if (www.error != null) { Debug.Log("Не удалось связаться с сервером!"); yield break; }
-        Debug.Log(www.downloadHandler.text);
         _json = JsonHelper.fixJson(www.downloadHandler.text);
         _products = JsonHelper.FromJson<ShopProduct>(_json);
         _onProductsLoad?.Invoke();
     }
-
+    //Апдейтим данные таблицы
     private IEnumerator PostOrder(int ID)
     {
         StopCoroutine(nameof(Waiter));
@@ -93,10 +91,10 @@ public class ShopProducts : MonoBehaviour
             else _onProductPurchased?.Invoke();
         }
     }
-
-    private IEnumerator GetProductIcons()
+    //Загружаем спрайты продуктов
+    private IEnumerator GetProductIcons(ShopProduct[] products)
     {
-        foreach (var item in Products)
+        foreach (var item in products)
         {
             _www = UnityWebRequestTexture.GetTexture(item.img_url);
             yield return _www.SendWebRequest();
@@ -112,7 +110,7 @@ public class ShopProducts : MonoBehaviour
         }
         _onIconsLoad?.Invoke();
     }
-
+    //Загружаем конкретное кол-во продуктов
     private IEnumerator GetProductCountByID(int productID)
     {
         StopCoroutine(nameof(Waiter));
@@ -140,11 +138,23 @@ public class ShopProducts : MonoBehaviour
         }
     }
 
-
+    //Кулдаун, по которому работает запросы для обновления в реалтайме (пока не придумал альтернативы для загрузки в реальном времени, кроме как отправлять такой же запрос по времени)
     private IEnumerator Waiter(string request, int ID)
     {
         yield return new WaitForSecondsRealtime(ServerSettings.Cooldown / 2);
         if (request.Equals("getcount")) StartCoroutine(GetProductCountByID(ID));
+    }
+
+
+    public void StopLoadProductCount()
+    {
+        StopCoroutine(nameof(GetProductCountByID));
+        StopCoroutine(nameof(Waiter));
+    }
+
+    public void StopCoroutines()
+    {
+        this.StopAllCoroutines();
     }
 
     private void OnDisable()

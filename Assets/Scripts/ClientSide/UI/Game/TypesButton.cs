@@ -49,6 +49,16 @@ public class TypesButton : MonoBehaviour
         }
     }
 
+
+    public void SetAllButtonsActive()
+    {
+        foreach (var item in TypeButtons)
+        {
+            item.GetComponent<Image>().sprite = Resources.Load<Sprite>(PATH + item.name);
+            if (PATH.Contains("Shop")) SetTextColor(item, new Color32(255, 242, 230, 255));
+        }
+    }
+
     private void SetTextColor(Button button, Color32 color)
     {
         button.GetComponentInChildren<TMP_Text>().color = color;
