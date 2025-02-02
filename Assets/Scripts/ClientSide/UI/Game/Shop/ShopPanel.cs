@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class ShopPanel : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class ShopPanel : MonoBehaviour
     [SerializeField] private ScrollRect _scroll;
     [SerializeField] private RectTransform _productPrefab;
     [SerializeField] private RectTransform _purchasePrefab;
+    [SerializeField] private TMP_Text _panelTitle;
 
     [Header("Category")]
     [SerializeField] private List<Button> _types;
@@ -35,6 +35,7 @@ public class ShopPanel : MonoBehaviour
     {
         _isProductsLoading = true;
         _isPurchasesLoading = !_isProductsLoading;
+        _panelTitle.text = "Магазин";
         StartLoad();
         _shop.DownloadProducts(ProductType);
     }
@@ -43,6 +44,7 @@ public class ShopPanel : MonoBehaviour
     {
         _isPurchasesLoading = true;
         _isProductsLoading = !_isPurchasesLoading;
+        _panelTitle.text = "Покупки";
         StartLoad();
         _purchase.GetActivePurchases();
     }

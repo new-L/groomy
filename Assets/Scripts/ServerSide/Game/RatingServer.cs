@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 
 public class RatingServer : MonoBehaviour
@@ -13,14 +16,45 @@ public class RatingServer : MonoBehaviour
     private UnityWebRequest _www;
     private int _count;
     private bool _isSended;
+    private string _json;
 
     public bool IsSended { get => _isSended; }
+    public Rating[] Ratings { get => _ratings; }
     #endregion
+
+    [SerializeField] private Rating[] _ratings;
+    [SerializeField] private UnityEvent _onRatingLoaded;
 
     public void Counting(int count, RequestType type)
     {
         _isSended = false;
         StartCoroutine(CountingRating(type, count));
+    }
+    public void StartLoadRatingList()
+    {
+        StartCoroutine(nameof(GetList));
+    }
+
+    private IEnumerator GetList()
+    {
+        _form = new WWWForm();
+        _form.AddField("user_id", User.Player.user_id);
+        _form.AddField("request_type", "getratinglist");
+
+        _www = UnityWebRequest.Post(URLs.UserRating, _form);
+
+        _www.timeout = ServerSettings.TimeOut;
+        yield return _www.SendWebRequest();
+        if (_www.error != null)
+        {
+            Debug.Log("\n" + _www.error);
+            yield break;
+        }
+
+        Debug.Log(_www.downloadHandler.text);
+        _json = JsonHelper.fixJson(_www.downloadHandler.text);
+        _ratings = JsonHelper.FromJson<Rating>(_json);
+        _onRatingLoaded?.Invoke();
     }
 
     private IEnumerator CountingRating(RequestType request, int count)
@@ -58,4 +92,13 @@ public class RatingServer : MonoBehaviour
         StartCoroutine(CountingRating(request, _count));
         Debug.Log("AFTER " + ServerSettings.Cooldown + " seconds waiter is working!");
     }
+}
+
+[Serializable]
+public class Rating
+{
+    public int place;
+    public string name;
+    public int count;
+    public int userID;
 }
