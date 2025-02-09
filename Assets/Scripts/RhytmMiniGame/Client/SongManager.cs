@@ -98,15 +98,15 @@ public class SongManager : MonoBehaviour
         {
             case DifficultLevel.Low:
                 noteTime = 2.2f;
-                marginOfError = .14d;
+                marginOfError = .145d;
                 break;
             case DifficultLevel.Medium:
-                noteTime = 1.4f;
-                marginOfError = .09d;
+                noteTime = 1.3f;
+                marginOfError = .10d;
                 break;
             case DifficultLevel.High:
                 noteTime = .95f;
-                marginOfError = .075d;
+                marginOfError = .08d;
                 break;
             default:
                 noteTime = 2.2f;

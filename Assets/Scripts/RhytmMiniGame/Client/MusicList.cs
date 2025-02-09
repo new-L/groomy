@@ -125,15 +125,6 @@ public class MusicList : MonoBehaviour
         }
     }
 
-    private DifficultLevel GetLevel(int index)
-    {
-        switch ((DifficultLevel)index)
-        {
-            case (DifficultLevel.Low): return DifficultLevel.Low;
-            case (DifficultLevel.Medium): return DifficultLevel.Medium;
-            case (DifficultLevel.High): return DifficultLevel.High;
-            default: return DifficultLevel.Low;
-        }
-    }
+    private DifficultLevel GetLevel(int index) => (DifficultLevel)index;
     private string TimeToText(int time) => string.Format((time / 60).ToString("00") + ":" + (time % 60).ToString("00"));
 }

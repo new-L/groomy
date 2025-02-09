@@ -14,13 +14,16 @@ public class Tutorial : MonoBehaviour
 
     private void Start()
     {
-        TutorialPassedInfo();
+        TutorialPassedInfo(true);
     }
 
-    public void TutorialPassedInfo()
+    public void TutorialPassedInfo(bool isVisible)
     {
-        Actions.OnStartLoad?.Invoke();
-        StartCoroutine(CheckTutorialPassedInfo("rhytmgame"));
+        _tutorial.SetActive(isVisible);
+        _isPassed = isVisible;
+        if (_isPassed) _music.StartAfterTutorial();
+        //Actions.OnStartLoad?.Invoke();
+        //StartCoroutine(CheckTutorialPassedInfo("rhytmgame"));
     }
 
     public void HidePanel()
@@ -49,11 +52,11 @@ public class Tutorial : MonoBehaviour
     }
     private void OnEnable()
     {
-        Actions.OnListCreated += HidePanel;
+        //Actions.OnListCreated += HidePanel;
     }
 
     private void OnDisable()
     {
-        Actions.OnListCreated -= HidePanel;
+        //Actions.OnListCreated -= HidePanel;
     }
 }
