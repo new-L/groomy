@@ -97,19 +97,19 @@ public class SongManager : MonoBehaviour
         switch (DifficultLevel)
         {
             case DifficultLevel.Low:
-                noteTime = 2;
-                marginOfError = .13d;
+                noteTime = 2.2f;
+                marginOfError = .14d;
                 break;
             case DifficultLevel.Medium:
-                noteTime = 1.2f;
-                marginOfError = .085d;
+                noteTime = 1.4f;
+                marginOfError = .09d;
                 break;
             case DifficultLevel.High:
-                noteTime = .8f;
-                marginOfError = .055d;
+                noteTime = .95f;
+                marginOfError = .075d;
                 break;
             default:
-                noteTime = 2;
+                noteTime = 2.2f;
                 marginOfError = .13d;
                 break;
         }

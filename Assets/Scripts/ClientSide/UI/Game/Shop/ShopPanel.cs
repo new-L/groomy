@@ -14,7 +14,10 @@ public class ShopPanel : MonoBehaviour
     [SerializeField] private ScrollRect _scroll;
     [SerializeField] private RectTransform _productPrefab;
     [SerializeField] private RectTransform _purchasePrefab;
+
+    [Header("UI")]
     [SerializeField] private TMP_Text _panelTitle;
+    [SerializeField] private TMP_Text _alert;
 
     [Header("Category")]
     [SerializeField] private List<Button> _types;
@@ -50,6 +53,7 @@ public class ShopPanel : MonoBehaviour
     }
     private void StartLoad()
     {
+        _alert.gameObject.SetActive(false);
         _inGameLoader.SetLoader(_loader);
         _typesButton.PATH = "Art/UI/Shop/";
         _typesButton.TypeButtons = _types;
@@ -63,6 +67,8 @@ public class ShopPanel : MonoBehaviour
         if (!_isProductsLoading) return;
         if (!CheckArrayNullOrEmpty(_shop.Products))
         {
+            _alert.text = "Пусто!";
+            _alert.gameObject.SetActive(true);
             OnListCreated();
             return;
         }
@@ -80,6 +86,8 @@ public class ShopPanel : MonoBehaviour
         if (!_isPurchasesLoading) return;
         if (!CheckArrayNullOrEmpty(_purchase.Purchases))
         {
+            _alert.text = "Пусто!";
+            _alert.gameObject.SetActive(true);
             OnListCreated();
             return;
         }

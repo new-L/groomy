@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements.Experimental;
-using static UnityEditor.Progress;
 
 public class RatingPanel : MonoBehaviour
 {
@@ -44,7 +40,7 @@ public class RatingPanel : MonoBehaviour
         for (int i = 0; i < _rating.Ratings.Length; i++)
         {
             if(i != _rating.Ratings.Length - 1)
-             InitializeItem(_rating.Ratings[i], _ratingPrefab);
+             InitializeItem(_rating.Ratings[i], _ratingPrefab, i+1);
             if (_rating.Ratings[i].userID == User.Player.user_id)
             {
                 if (_rating.Ratings[i].place == 0 && _rating.Ratings[i].count == 0)
@@ -59,10 +55,10 @@ public class RatingPanel : MonoBehaviour
         Actions.OnListCreated?.Invoke();
     }
 
-    private void InitializeItem(Rating item, RectTransform prefab)
+    private void InitializeItem(Rating item, RectTransform prefab, int place)
     {
         var instance = GameObject.Instantiate(prefab.gameObject) as GameObject;
-        instance.GetComponent<RatingElement>().SetDetail(item);
+        instance.GetComponent<RatingElement>().SetDetail(item, place);
         instance.transform.SetParent(_content, false);
     }
     private bool CheckArrayNullOrEmpty(Rating[] rating)

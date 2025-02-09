@@ -23,6 +23,7 @@ public class ShopProducts : MonoBehaviour
 
     private WWWForm _form;
     public ShopProduct[] Products { get => _products; }
+    public UnityEvent OnIconsLoad { get => _onIconsLoad; set => _onIconsLoad = value; }
 
     //Методы для для взаимодействия с внешними скриптами
     //Загрузка всех товаров определенного типа
@@ -108,7 +109,7 @@ public class ShopProducts : MonoBehaviour
                 item.icon = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), new Vector2());
             }
         }
-        _onIconsLoad?.Invoke();
+        OnIconsLoad?.Invoke();
     }
     //Загружаем конкретное кол-во продуктов
     private IEnumerator GetProductCountByID(int productID)

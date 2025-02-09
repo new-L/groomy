@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -37,10 +38,17 @@ public class PurchaseOnServer : MonoBehaviour
 
         yield return www.SendWebRequest();
         if (www.error != null) { Debug.Log("Не удалось связаться с сервером!"); yield break; }
-        Debug.Log(www.downloadHandler.text);
-        _json = JsonHelper.fixJson(www.downloadHandler.text);
-        _purchases = JsonHelper.FromJson<ShopProduct>(_json);
-        _onPurchasesLoaded?.Invoke();
+        _json = www.downloadHandler.text;
+        if (!_json.Equals("\"\""))
+        {
+            _json = JsonHelper.fixJson(www.downloadHandler.text);
+            _purchases = JsonHelper.FromJson<ShopProduct>(_json);
+            if (_purchases.Length != 0) _onPurchasesLoaded?.Invoke();
+        }
+        else
+        {
+            _shop.OnIconsLoad?.Invoke();
+        }
     }
 
     private void OnDisable()
