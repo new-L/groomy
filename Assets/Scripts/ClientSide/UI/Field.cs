@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,9 @@ public class Field : MonoBehaviour
     [SerializeField] private Notification _notification;
     [SerializeField] private DigitKeyboard _keyboard;
     [SerializeField] private Toggle _saveToggle;
+    [SerializeField] private Image _hidePasswordImage;
+    [SerializeField] private Sprite _hide;
+    [SerializeField] private Sprite _eye;
 
     [Space(10)]
     [Header("Server")]
@@ -22,6 +26,7 @@ public class Field : MonoBehaviour
     [SerializeField] private SavePlayerPrefs _playerPrefs;
 
     private string _login = "", _password = "";
+    private bool _isNeedHide = true;
 
     public string Login { get => _login; set => _login = value; }
     public string Password { get => _password; set => _password = value; }
@@ -43,8 +48,14 @@ public class Field : MonoBehaviour
             }
         }
     }
-    public void DataEntry(bool isHide)
-    {
+    public void DataEntry(bool isHide) { 
+    //{
+    //    if(isHide && !_isNeedHide)
+    //    {
+    //        print("Это сработало");
+            
+    //        return;
+    //    }
         if (isHide)
         {
             _keyboard.FieldSetUp(isHide, this, _passwordIpnutField);
@@ -59,12 +70,41 @@ public class Field : MonoBehaviour
 
     public void SendAuthorizationRequest()
     {
-        if (!isFieldEmpty(LoginInputField) || !isFieldEmpty(PasswordIpnutField)) { _notification.NotificationIn("Один из полей пуст!"); return; }
+        if (!isFieldEmpty(LoginInputField) || !isFieldEmpty(PasswordIpnutField)) { _notification.Set(NotificationType.Attention, "Один из полей пуст!"); _notification.Play(); return; }
         if (_saveToggle.isOn) _playerPrefs.SaveAuthDatas(Login, Password);
         else _playerPrefs.DeleteAuthDatas();
         _authorization.GetAuthorizationStatus(Login, Password);
     }
 
+    public void HidePassword()
+    {
+        _isNeedHide = !_isNeedHide;
+        _passwordIpnutField.text = "";
+        if (_isNeedHide)
+        {
+            foreach (var item in _password)
+            {
+                _passwordIpnutField.text += "*";
+            }
+            _hidePasswordImage.sprite = _hide;
+            _keyboard.FieldSetUp(true, false, this, _passwordIpnutField);
+            ActiveInputField(_passwordIpnutField.GetComponentInParent<Image>());
+        }
+        else
+        {
+            foreach (var item in _password)
+            {
+                _passwordIpnutField.text += item;
+            }
+            _hidePasswordImage.sprite = _eye;
+            _keyboard.FieldSetUp(true, true, this, _passwordIpnutField);
+            ActiveInputField(_passwordIpnutField.GetComponentInParent<Image>());
+        }
+    }
+    private void Update()
+    {
+        print(_isNeedHide);
+    }
     private bool isFieldEmpty(TMP_Text inputField)
     {
         if (string.IsNullOrEmpty(inputField.text)) return false;

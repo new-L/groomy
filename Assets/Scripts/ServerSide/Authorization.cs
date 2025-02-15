@@ -24,8 +24,18 @@ public class Authorization : MonoBehaviour
         www.timeout = ServerSettings.TimeOut;
 
         yield return www.SendWebRequest();
-        if (www.error != null) { _notification.NotificationIn(www.error); yield break; }
-        if (www.downloadHandler.text.Equals("")) { _notification.NotificationIn("Введен неверный логин или пароль!"); yield break; }
+        if (www.error != null) 
+        { 
+            _notification.Set(NotificationType.Error, "Не удалось подключиться к серверу!");
+            _notification.Play();
+            yield break; 
+        }
+        if (www.downloadHandler.text.Equals("")) 
+        { 
+            _notification.Set(NotificationType.Attention, "Введен неверный логин или пароль!");
+            _notification.Play();
+            yield break; 
+        }
         User.Player = JsonUtility.FromJson<Player>(www.downloadHandler.text);
         
         //Подговнокодил я везде знатно, кнш, но с этим надо что-то делать

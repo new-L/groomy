@@ -28,6 +28,8 @@ public class Lane : MonoBehaviour
     [SerializeField] private SpriteRenderer _laneEffect;
     [SerializeField] private List<Sprite> _laneEffects;
 
+    [SerializeField] private ParticleSystem _hitParticle;
+
 
     public void Clear()
     {
@@ -88,7 +90,6 @@ public class Lane : MonoBehaviour
                 double timeStamp = timeStamps[inputIndex];
                 double marginOfError = SongManager.Instance.marginOfError;
                 double audioTime = SongManager.GetAudioSourceTime() - (SongManager.Instance.inputDelayInMilliseconds / 1000.0);
-
                 if (Input.GetKeyDown(input) || _isPressed)
                 {
                     Pressed();
@@ -107,6 +108,7 @@ public class Lane : MonoBehaviour
                 }
                 if (timeStamp + marginOfError <= audioTime)
                 {
+                Debug.Log(notes[inputIndex].gameObject.transform.position);
                     Miss();
                     //print($"Missed {inputIndex} note");
                     inputIndex++;
@@ -125,10 +127,12 @@ public class Lane : MonoBehaviour
     {
         _scoreManager.Hit();
         _hit.Play();
+        _hitParticle.Play();
         Paint(0, 221, 22, 185);
     }
     private void Miss()
     {
+        _hitParticle.Stop();
         _scoreManager.Miss();
         if (!_hit.isPlaying) _miss.Play();
         _laneEffect.gameObject.GetComponent<Animator>().StopPlayback();

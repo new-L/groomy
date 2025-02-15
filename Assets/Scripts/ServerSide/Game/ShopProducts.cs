@@ -87,8 +87,17 @@ public class ShopProducts : MonoBehaviour
         {
             string _text = www.downloadHandler.text.ToString();
             print(_text);
-            if (_text.Contains("{gold_error}")) { _notification.NotificationIn("Недостаточно монет!"); _onPurchaseBreak?.Invoke(); }
-            else if (_text.Contains("{product_error}")) { _notification.NotificationIn("Товар закончился!"); _onPurchaseBreak?.Invoke(); }
+            if (_text.Contains("{gold_error}")) 
+            { 
+                _notification.Set(NotificationType.Attention,"Недостаточно монет!");
+                _notification.Play();
+                _onPurchaseBreak?.Invoke(); 
+            }
+            else if (_text.Contains("{product_error}")) 
+            { 
+                _notification.Set(NotificationType.Attention, "Товар закончился!");
+                _notification.Play();
+                _onPurchaseBreak?.Invoke(); }
             else _onProductPurchased?.Invoke();
         }
     }

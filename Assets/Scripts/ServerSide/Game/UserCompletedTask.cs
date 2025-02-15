@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 
 public class UserCompletedTask : MonoBehaviour
 {
+    [SerializeField] private UnityEvent _taskCreated;
+    [SerializeField] private Notification _notification;
     [SerializeField] private RectTransform _completedTaskPrefab;
     [SerializeField] private TaskPanelUI _taskPanel; 
     private static CompletedTasks[] _completedTasks;
@@ -88,6 +91,9 @@ public class UserCompletedTask : MonoBehaviour
         else if(responseType.Equals("create")) 
         {
             _taskPanel.SetUpDailyTask();
+            _notification.Set(NotificationType.Accept, "Задание отправлено на проверку");
+            _notification.Play();
+            _taskCreated?.Invoke();
         }
         
     }
