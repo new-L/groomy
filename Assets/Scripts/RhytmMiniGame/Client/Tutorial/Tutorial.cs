@@ -11,10 +11,12 @@ public class Tutorial : MonoBehaviour
     [SerializeField] private Music _music;
     [SerializeField] private bool _isPassed;
     [SerializeField] private GameObject _tutorial;
+    [SerializeField] private GameObject _hideButton;
 
     private void Start()
     {
         TutorialPassedInfo(true);
+        StartCoroutine(nameof(AnimationWaiter));
     }
 
     public void TutorialPassedInfo(bool isVisible)
@@ -50,6 +52,14 @@ public class Tutorial : MonoBehaviour
             _tutorial.SetActive(true);
         }
     }
+
+    private IEnumerator AnimationWaiter()
+    {
+        _hideButton.SetActive(false);
+        yield return new WaitForSecondsRealtime(3f);
+        _hideButton.SetActive(true);
+    }
+
     private void OnEnable()
     {
         //Actions.OnListCreated += HidePanel;

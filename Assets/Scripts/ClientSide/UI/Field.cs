@@ -101,10 +101,6 @@ public class Field : MonoBehaviour
             ActiveInputField(_passwordIpnutField.GetComponentInParent<Image>());
         }
     }
-    private void Update()
-    {
-        print(_isNeedHide);
-    }
     private bool isFieldEmpty(TMP_Text inputField)
     {
         if (string.IsNullOrEmpty(inputField.text)) return false;
