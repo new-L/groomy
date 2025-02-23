@@ -9,6 +9,8 @@ public class EndGame : MonoBehaviour
 {
     [Tooltip("In seconds")][SerializeField] private float _endGameDelay = 3f;
     [SerializeField] private Currency _userCurrency;
+    [SerializeField] private LimitUI _limit;
+    [SerializeField] private GameLimit _currentLimit;
     [SerializeField] private RatingServer _rating;
 
     private int _totalNotes, _totalProgress;
@@ -74,7 +76,7 @@ public class EndGame : MonoBehaviour
             _statusText.color = new Color32(122, 254, 87, 255);
             CoinsRewardCalculation(_totalNotes, _melody);
             RatingRewardCalculation(RequestType.Add);
-
+            _limit.ReduceAndSet();
         }
 
     }
@@ -111,6 +113,7 @@ public class EndGame : MonoBehaviour
                 _currencyReward = melody.reward * (int)DifficultLevel.Low;
                 break;
         }
+        if (_currentLimit.Limit.current <= 0) _currencyReward = 0;
     }
 
     private void RatingCalculation(int totalProgress, RequestType type)

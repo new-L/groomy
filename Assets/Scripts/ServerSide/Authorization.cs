@@ -36,6 +36,7 @@ public class Authorization : MonoBehaviour
             _notification.Play();
             yield break; 
         }
+        Debug.Log(www.downloadHandler.text);
         User.Player = JsonUtility.FromJson<Player>(www.downloadHandler.text);
         
         //Подговнокодил я везде знатно, кнш, но с этим надо что-то делать

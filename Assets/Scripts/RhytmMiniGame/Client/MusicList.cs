@@ -14,13 +14,13 @@ public class MusicList : MonoBehaviour
     [SerializeField] private SongManager _songManager;
     [SerializeField] private GameObject _prefab;
     [SerializeField] private GameObject _taskListView;
-    [SerializeField] private GameObject _logo;
-    [SerializeField] private GameObject _backButton;
+    [SerializeField] private GameObject _canvasTop;
     [SerializeField] private Transform _content;
 
     [Header("Music Preview Panel")]
     [SerializeField] private GameObject _panel;
     [SerializeField] private Image _previewImage;
+    [SerializeField] private GameObject _goldIcon;
     [SerializeField] private TMP_Text _name, _author, _reward, _time;
     [SerializeField] private AudioSource _previewAudioSource;
 
@@ -30,7 +30,9 @@ public class MusicList : MonoBehaviour
     [SerializeField] private TMP_Text _gameNameAnim;
     [SerializeField] private TMP_Text _gameRecomendAnim;
 
+    [SerializeField] private GameLimit _limit;
     [SerializeField] private UnityEvent OnStartLoad;
+    [SerializeField] private UnityEvent OnListLoaded;
 
     private void Start()
     {
@@ -43,8 +45,7 @@ public class MusicList : MonoBehaviour
         _gameName.gameObject.SetActive(false);
         _gameAuthor.gameObject.SetActive(false);
         _taskListView.SetActive(true);
-        _logo.SetActive(true);
-        _backButton.SetActive(true);
+        _canvasTop.SetActive(true);
     }
 
     public void SetUpList()
@@ -52,7 +53,7 @@ public class MusicList : MonoBehaviour
         ClearList(_content);
         if (_music.Melodies.Length == 0 || _music.Melodies == null)
         {
-            Actions.OnListCreated?.Invoke();
+            OnListLoaded?.Invoke();
             return;
         }
         foreach (var item in _music.Melodies)
@@ -61,7 +62,7 @@ public class MusicList : MonoBehaviour
             instance.transform.SetParent(_content, false);
             instance.GetComponent<MusiListElement>().SetMelodyInfo(item, _music);
         }
-        Actions.OnListCreated?.Invoke();
+        OnListLoaded?.Invoke();
     }
 
     public void SetUpPreview(Sprite sprite, AudioClip clip, Melody melody)
@@ -71,7 +72,16 @@ public class MusicList : MonoBehaviour
         _previewAudioSource.clip = clip;
         _name.text = melody.name;
         _author.text = $"{melody.author} | {melody.recomend}";
-        _reward.text = $"Награда: +{melody.reward}";
+        if (_limit.Limit.current <= 0)
+        {
+            _reward.text = $"Только рейтинг!";
+            _goldIcon.SetActive(false);
+        }
+        else
+        {
+            _reward.text = $"Награда: +{melody.reward}";
+            _goldIcon.SetActive(true);
+        }
         _time.text = TimeToText(melody.playtime);
         _panel.SetActive(true);
         _previewAudioSource.Play();

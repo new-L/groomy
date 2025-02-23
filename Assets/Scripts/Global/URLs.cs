@@ -9,6 +9,7 @@ public class URLs : MonoBehaviour
     private static string _tutorial = "https://unnamedplace.ru/dbhelper/tutorials.php";
     private string _shopProduct = "https://unnamedplace.ru/dbhelper/shop.php";
     private string _purchaseProduct = "https://unnamedplace.ru/dbhelper/purchase.php";
+    private static string _rhytmgamelimit = "https://unnamedplace.ru/dbhelper/rhytmgamelimit.php";
 
     public static string Authorization { get => _authorization; }
     public static string UserCurrency { get => _userCurrency; }
@@ -16,6 +17,7 @@ public class URLs : MonoBehaviour
     public static string Tutorial { get => _tutorial; }
     public  string ShopProduct { get => _shopProduct; }
     public  string PurchaseProduct { get => _purchaseProduct; }
+    public static string Rhytmgamelimit { get => _rhytmgamelimit; }
 
     #endregion
 

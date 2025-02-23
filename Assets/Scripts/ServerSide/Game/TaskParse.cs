@@ -36,7 +36,7 @@ public class TaskParse : MonoBehaviour
 
         yield return www.SendWebRequest();
         if (www.error != null) { Debug.Log("Не удалось связаться с сервером!"); yield break; }
-        Debug.Log(www.downloadHandler.text);
+        //Debug.Log(www.downloadHandler.text);
         _json = JsonHelper.fixJson(www.downloadHandler.text);
 
 

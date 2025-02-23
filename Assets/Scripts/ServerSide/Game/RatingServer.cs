@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 
 public class RatingServer : MonoBehaviour
 {
-    [SerializeField] private Player _player;
     [SerializeField] private EndGame _endGame;
 
     #region ServerFields
