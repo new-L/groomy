@@ -18,24 +18,35 @@ public class ScoreManager : MonoBehaviour
     private int _actionScore;
     private bool _isHitted;
 
+    private int _comboX5Count = 0;
+    private int _comboX5Local = 0;
+    private int _comboX10Count = 0;
+    private int _comboX10Local = 0;
+
     [SerializeField] private List<string> _actionTextList;
 
     public static int ComboScore { get => _comboScore; }
+    public int ComboX5Count { get => _comboX5Count; private set => _comboX5Count = value; }
+    public int ComboX10Count { get => _comboX10Count; private set => _comboX10Count = value; }
 
     public void Clear()
     {
         Instance = this;
         _actionScore = 0;
+        ComboX5Count = 0;
+        ComboX10Count = 0;
+        _comboX5Local = 0;
+        _comboX10Local = 0;
         _comboScore = 0;
         SetScoreText();
     }
     public void Hit()
     {
-   //     _actionScore += 1;
         _comboScore += 1;
+        ComboHits(ref _comboX5Local, 5, ref _comboX5Count);
+        ComboHits(ref _comboX10Local, 10, ref _comboX10Count);
         Instance.hitSFX.Play();
         _isHitted = true;
-  //      ActionScore();
         Animation();
         SetScoreText();
     }
@@ -48,21 +59,32 @@ public class ScoreManager : MonoBehaviour
     {
         _isHitted = false;
         _comboScore -= CheckScoreUnderNull(1);
+        ResetComboHits(ref _comboX5Local);
+        ResetComboHits(ref _comboX10Local);
         SetScoreText();
     }
+
+
+    private void ComboHits(ref int combo, int multiplication, ref int comboCount)
+    {
+        combo += 1;
+        if (combo == multiplication)
+        {
+            combo = 0;
+            comboCount += 1;
+        }
+    }
+
+    private void ResetComboHits(ref int combo)
+    {
+        combo = 0;
+    }
+
     private void Animation()
     {
         _scoreTextAnimator.SetBool("isHitted", _isHitted);
         _isHitted = false;
     }
-
-    //private void ActionScore()
-    //{
-    //    if (_actionTextList.Count == 0 || _actionScore < 10) return;
-    //    _actionText.text = _actionTextList[Random.Range(0, _actionTextList.Count)];
-    //    _actionText.gameObject.SetActive(true);
-    //    _actionScore = 0;
-    //}
 
     private void Start()
     {

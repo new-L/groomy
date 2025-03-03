@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
 using System.Threading;
+using System;
 
 public class EndGame : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class EndGame : MonoBehaviour
     [SerializeField] private LimitUI _limit;
     [SerializeField] private GameLimit _currentLimit;
     [SerializeField] private RatingServer _rating;
+    [SerializeField] private SongManager _songManager;
+    [SerializeField] private ScoreManager _scoreManager;
+    [SerializeField] private MultiplicatorList _multiplicatorList;
 
     private int _totalNotes, _totalProgress;
     private Melody _melody;
@@ -22,17 +26,14 @@ public class EndGame : MonoBehaviour
     public UnityEvent OnDatasSended { get => _onDatasSended; set => _onDatasSended = value; }
     #endregion
 
-
     private int _ratingReward, _currencyReward;
 
     [Header("UI")]
-    [SerializeField] private Image _statusPanel;
     [SerializeField] private TMP_Text _statusText;
     [SerializeField] private TMP_Text _coinsRewardText;
     [SerializeField] private TMP_Text _ratingRewardText;
     [SerializeField] private GameObject _menuButton;
     [SerializeField] private GameObject _loader;
-    private const string PATH = "Art/UI/RhytmGame/";
 
     public IEnumerator Waiter(int totalNotes, Melody melody)
     {
@@ -60,9 +61,9 @@ public class EndGame : MonoBehaviour
     {
         _onGameEnded?.Invoke();
         _totalProgress = (int)((double)ScoreManager.ComboScore / _totalNotes * 100);
-        if(_totalProgress < 50)
+        _multiplicatorList.ResetEvenIndex();
+        if (_totalProgress < 50)
         {
-            _statusPanel.sprite = Resources.Load<Sprite>($"{PATH}EndGameLosePanel");
             _statusText.text = "Поражение";
             _statusText.color = new Color32(255, 33, 46, 255);
             _coinsRewardText.text = "0";
@@ -71,21 +72,24 @@ public class EndGame : MonoBehaviour
         }
         else
         {
-            _statusPanel.sprite = Resources.Load<Sprite>($"{PATH}EndGameWinPanel");
             _statusText.text = "Победа";
             _statusText.color = new Color32(122, 254, 87, 255);
-            CoinsRewardCalculation(_totalNotes, _melody);
-            RatingRewardCalculation(RequestType.Add);
+            StartCoroutine(SendCalculation());
             _limit.ReduceAndSet();
         }
-
     }
 
-    private void CoinsRewardCalculation(int totalNotes, Melody melody)
+    private void CoinsAdd(int add)
     {
-        CurrencyCalculcation(melody);
-        _coinsRewardText.text = $"+{_currencyReward}";
-        _userCurrency.Add(_currencyReward);        
+        _currencyReward += add;
+        if (_currentLimit.Limit.current <= 0) _currencyReward = 0;
+        _coinsRewardText.text = $"+{_currencyReward}"; 
+    }
+
+    private void RatingAdd(int add)
+    {
+        _ratingReward += add;
+        _ratingRewardText.text = $"+{_ratingReward}";
     }
     private void RatingRewardCalculation(RequestType type)
     {
@@ -95,34 +99,61 @@ public class EndGame : MonoBehaviour
         _rating.Counting(_ratingReward, type);        
     }
 
-
-    private void CurrencyCalculcation(Melody melody)
-    {
-        switch (SongManager.DifficultLevel)
-        {
-            case DifficultLevel.Low:
-                _currencyReward = melody.reward * (int)DifficultLevel.Low;
-                break;
-            case DifficultLevel.Medium:
-                _currencyReward = melody.reward * (int)DifficultLevel.Medium;
-                break;
-            case DifficultLevel.High:
-                _currencyReward = melody.reward * (int)DifficultLevel.High;
-                break;
-            default:
-                _currencyReward = melody.reward * (int)DifficultLevel.Low;
-                break;
-        }
-        if (_currentLimit.Limit.current <= 0) _currencyReward = 0;
-    }
-
     private void RatingCalculation(int totalProgress, RequestType type)
     {
         _ratingReward = totalProgress / 10 * (int)SongManager.DifficultLevel;
-        if (type == RequestType.Subtract) _ratingReward = 10;
+        if (type == RequestType.Subtract) _ratingReward = 10 * (int)SongManager.DifficultLevel;
     }
 
+    private IEnumerator SendCalculation()
+    {
+        CoinsAdd(_melody.reward);//Считаем базу
+        RatingAdd(_totalProgress / 10);
+        yield return new WaitForSecondsRealtime(.4f);
 
+        CoinsAdd(CurrencyMultiplicatorCalc());//Считаем по сложности
+        RatingAdd(RatingMultiplicatorCalc());//Считаем по сложности
+        _multiplicatorList.SetUpListElement("Сложность",
+            SongManager.DifficultLevel.ToString(),
+            _currencyReward.ToString(),
+            _ratingReward.ToString());
+        
 
+        yield return new WaitForSecondsRealtime(.4f);
+        CoinsAdd(ComboXCalc(_scoreManager.ComboX5Count, 0.15f, true)); //Считаем по х5
+        RatingAdd(ComboXCalc(_scoreManager.ComboX5Count, .3f, false));
+        _multiplicatorList.SetUpListElement("Кобмо x5",
+            _scoreManager.ComboX5Count.ToString(),
+            ComboXCalc(_scoreManager.ComboX5Count, 0.15f, true).ToString(),
+            ComboXCalc(_scoreManager.ComboX5Count, .3f, false).ToString());
 
+        yield return new WaitForSecondsRealtime(.4f);
+        CoinsAdd(ComboXCalc(_scoreManager.ComboX10Count, 0.4f, true)); //Считаем по х10
+        RatingAdd(ComboXCalc(_scoreManager.ComboX10Count, .5f, false));
+        _multiplicatorList.SetUpListElement("Кобмо x10",
+            _scoreManager.ComboX10Count.ToString(),
+            ComboXCalc(_scoreManager.ComboX10Count, 0.4f, true).ToString(),
+            ComboXCalc(_scoreManager.ComboX10Count, .5f, false).ToString());
+
+        if (_currentLimit.Limit.current <= 0) _currencyReward = 0;
+        _userCurrency.Add(_currencyReward);
+        _rating.Counting(_ratingReward, RequestType.Add);
+    }
+
+    private int ComboXCalc(int combo, float multiplicator, bool isCurrency)
+    {
+        if (_currentLimit.Limit.current <= 0 && isCurrency) { _currencyReward = 0; return 0; }
+        return (int)(combo * multiplicator / 2);
+    }
+    private int CurrencyMultiplicatorCalc()
+    {
+        if (_currentLimit.Limit.current <= 0)
+            return 0;
+        else
+            return _currencyReward * (int)SongManager.DifficultLevel - _melody.reward;
+    }
+    private int RatingMultiplicatorCalc()
+    {
+        return _ratingReward * (int)SongManager.DifficultLevel - _ratingReward;
+    }
 }

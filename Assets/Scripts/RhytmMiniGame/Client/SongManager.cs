@@ -24,7 +24,7 @@ public class SongManager : MonoBehaviour
     public static MidiFile midiFile;
     [SerializeField] private EndGame _endGame;
     private Melody _melody;
-    private int _totalNotes;
+    [SerializeField] private int _totalNotes;
     private static DifficultLevel _difficultLevel = DifficultLevel.Low;
 
     public UnityEvent _datasDownload;
@@ -39,6 +39,7 @@ public class SongManager : MonoBehaviour
     }
 
     public static DifficultLevel DifficultLevel { get => _difficultLevel; set => _difficultLevel = value; }
+    public int TotalNotes { get => _totalNotes; private set => _totalNotes = value; }
     #endregion
 
 
@@ -70,7 +71,7 @@ public class SongManager : MonoBehaviour
     {
             var notes = midiFile.GetNotes();
         var array = new Melanchall.DryWetMidi.Interaction.Note[notes.Count];
-        _totalNotes = notes.Count;
+        TotalNotes = notes.Count;
         notes.CopyTo(array, 0);
 
         foreach (var lane in _lanes)
@@ -89,7 +90,7 @@ public class SongManager : MonoBehaviour
 
     public void EndSong()
     {
-        StartCoroutine(_endGame.Waiter(_totalNotes, _melody));
+        StartCoroutine(_endGame.Waiter(TotalNotes, _melody));
     }
 
     private void SetupDifficult()

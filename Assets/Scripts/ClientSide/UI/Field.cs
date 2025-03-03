@@ -49,13 +49,6 @@ public class Field : MonoBehaviour
         }
     }
     public void DataEntry(bool isHide) { 
-    //{
-    //    if(isHide && !_isNeedHide)
-    //    {
-    //        print("Это сработало");
-            
-    //        return;
-    //    }
         if (isHide)
         {
             _keyboard.FieldSetUp(isHide, this, _passwordIpnutField);

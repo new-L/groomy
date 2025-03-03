@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class URLs : MonoBehaviour
 {
+    //Менять в билде, убрав TEST
     #region UsersURLs
     private static string _authorization = "https://unnamedplace.ru/dbhelper/authorization.php";
     private static string _userCurrency = "https://unnamedplace.ru/dbhelper/usercurrency.php";
@@ -10,6 +11,7 @@ public class URLs : MonoBehaviour
     private string _shopProduct = "https://unnamedplace.ru/dbhelper/shop.php";
     private string _purchaseProduct = "https://unnamedplace.ru/dbhelper/purchase.php";
     private static string _rhytmgamelimit = "https://unnamedplace.ru/dbhelper/rhytmgamelimit.php";
+    private static string _inventory = "https://unnamedplace.ru/dbhelper/inventory.php";
 
     public static string Authorization { get => _authorization; }
     public static string UserCurrency { get => _userCurrency; }
@@ -18,6 +20,7 @@ public class URLs : MonoBehaviour
     public  string ShopProduct { get => _shopProduct; }
     public  string PurchaseProduct { get => _purchaseProduct; }
     public static string Rhytmgamelimit { get => _rhytmgamelimit; }
+    public string Inventory { get => _inventory; }
 
     #endregion
 
