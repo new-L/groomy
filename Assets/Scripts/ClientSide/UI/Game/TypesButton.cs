@@ -49,6 +49,20 @@ public class TypesButton : MonoBehaviour
         }
     }
 
+    public void SetButtonsTextColor(GameObject activeText)
+    {
+        foreach(var item in TypeButtons)
+        {
+            if (activeText == item.gameObject)
+            {
+                SetTextColor(item, new Color32(255, 255, 255, 255));
+            }
+            else
+            {
+                SetTextColor(item, new Color32(71, 39, 11, 255));
+            }
+        }
+    }
 
     public void SetAllButtonsActive()
     {

@@ -1,19 +1,12 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
-using static UnityEditor.Progress;
 
 public class InventoryServer : MonoBehaviour
 {
-    #region Constants
-    private const int HATID = 2001;
-    private const int BODYID = 2002;
-    private const int LEGSID = 2003;
-    private const int SKINID = 2004;
-    private const int ALL = 2994;
-    #endregion
 
     private WWWForm _form;
     private UnityWebRequest _www;
@@ -22,14 +15,25 @@ public class InventoryServer : MonoBehaviour
 
     [SerializeField] private Items[] _playerItems;
     [SerializeField] private URLs _url;
+    [SerializeField] private InventoryList _inventoryList;
+    [SerializeField] private LoadSystem _loadSystem;
+
+    public Items[] PlayerItems { get => _playerItems; private set => _playerItems = value; }
+
     private void Start()
     {
-        GetHats();
+        _loadSystem?.SceneStart?.Invoke();
+        StartCoroutine(Waiter(1f));
     }
 
-    public void GetHats()
+    public void GetType(SkinTypes type)
     {
-        StartCoroutine(SendRequest(HATID));
+        StartCoroutine(SendRequest((int)type));
+    }
+
+    public void GetAllItems()
+    {
+        StartCoroutine(SendRequest((int)SkinTypes.ALL));
     }
 
     private IEnumerator SendRequest(int id)
@@ -49,9 +53,9 @@ public class InventoryServer : MonoBehaviour
             yield break;
         }
         _json = JsonHelper.fixJson(_www.downloadHandler.text);
-        _playerItems = JsonHelper.FromJson<Items>(_json);
+        PlayerItems = JsonHelper.FromJson<Items>(_json);
 
-        foreach (var item in _playerItems)
+        foreach (var item in PlayerItems)
         {
             item.gamePosition = JsonUtility.FromJson<PositionInGame>(item.position_in_game); ;
         }
@@ -60,7 +64,7 @@ public class InventoryServer : MonoBehaviour
 
     private IEnumerator GetIcons()
     {
-        foreach (var item in _playerItems)
+        foreach (var item in PlayerItems)
         {
             _www = UnityWebRequestTexture.GetTexture(item.icon_url);
             yield return _www.SendWebRequest();
@@ -74,11 +78,12 @@ public class InventoryServer : MonoBehaviour
                 item.icon = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), new Vector2());
             }
         }
+        StartCoroutine(nameof(GetSignatures));
     }
 
     private IEnumerator GetSignatures()
     {
-        foreach (var item in _playerItems)
+        foreach (var item in PlayerItems)
         {
             if (!item.signature_url.Equals(""))
             {
@@ -95,17 +100,18 @@ public class InventoryServer : MonoBehaviour
                 }
             }
         }
+        _loadSystem.OnServerDatasLoaded?.Invoke();
     }
 
     private IEnumerator GetOutfitSkin(Items currentItem)
     {
-        foreach (var item in _playerItems)
+        foreach (var item in PlayerItems)
         {
             if(item.item_id == currentItem.item_id)
             {
 
                 _www.timeout = ServerSettings.TimeOut;
-                _www = UnityWebRequestTexture.GetTexture(currentItem.signature_url);
+                _www = UnityWebRequestTexture.GetTexture(currentItem.skin_url);
 
                 yield return _www.SendWebRequest();
                 if (_www.isNetworkError || _www.isHttpError)
@@ -115,11 +121,17 @@ public class InventoryServer : MonoBehaviour
                 else
                 {
                     _texture = ((DownloadHandlerTexture)_www.downloadHandler).texture;
-                    item.signature = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), new Vector2());
+                    item.sprite = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), new Vector2());
                 }
                 break;
             }
         }
+    }
+
+    private IEnumerator Waiter(float seconds)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        GetAllItems();
     }
 }
 [Serializable]
