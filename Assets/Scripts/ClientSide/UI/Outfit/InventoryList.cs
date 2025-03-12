@@ -6,6 +6,7 @@ public class InventoryList : MonoBehaviour
 {
     [Header("Items")]
     [SerializeField] private InventoryServer _inventoryServer;
+    [SerializeField] private GameObject _outfit;
 
     [Header("Scroll View")]
     [SerializeField] private RectTransform _content;
@@ -19,6 +20,8 @@ public class InventoryList : MonoBehaviour
 
     private SkinTypes _skinType = SkinTypes.HATID;
 
+    public SkinTypes SkinType { get => _skinType; private set => _skinType = value; }
+
     public void Head() { StartLoad(SkinTypes.HATID); }
     public void Body() { StartLoad(SkinTypes.BODYID); }
     public void Legs() { StartLoad(SkinTypes.LEGSID); }
@@ -28,15 +31,15 @@ public class InventoryList : MonoBehaviour
     {
         ClearListView();
         _alert.gameObject.SetActive(false);
-        _skinType = type;
-        _loadSystem?.OnServerDatasLoaded?.Invoke();
+        SkinType = type;
+        OnProductsLoaded();
     }
     public void OnProductsLoaded()
     {
         bool isExist = false;
         foreach (var item in _inventoryServer.PlayerItems)
         {
-            if(item.type_id == (int)_skinType) { isExist = true; break; }
+            if(item.type_id == (int)SkinType) { isExist = true; break; }
         }
         if (!isExist)
         {
@@ -46,7 +49,7 @@ public class InventoryList : MonoBehaviour
         }
         foreach (var item in _inventoryServer.PlayerItems)
         {
-            if (item.type_id == (int)_skinType)
+            if (item.type_id == (int)SkinType)
             {
                 InitializeItem(item, _itemPrefab);
             }
@@ -56,7 +59,7 @@ public class InventoryList : MonoBehaviour
     private void InitializeItem(Items item, RectTransform prefab)
     {
         var instance = GameObject.Instantiate(prefab.gameObject) as GameObject;
-        instance.GetComponent<OutfitItem>().SetUI(item);
+        instance.GetComponent<OutfitItem>().SetUI(item, _outfit);
         instance.transform.SetParent(_content, false);
     }
 

@@ -36,10 +36,15 @@ public class InventoryServer : MonoBehaviour
         StartCoroutine(SendRequest((int)SkinTypes.ALL));
     }
 
+    public void GetOutfitSkinByID(Items item)
+    {
+        StartCoroutine(GetOutfitSkin(item));
+    }
+
     private IEnumerator SendRequest(int id)
     {
         _form = new WWWForm();
-        _form.AddField("user_id", 406788);//User.Player.user_id);
+        _form.AddField("user_id", User.Player.user_id);
         _form.AddField("items_type", id);
         _www = UnityWebRequest.Post(_url.Inventory, _form);
 
@@ -57,7 +62,7 @@ public class InventoryServer : MonoBehaviour
 
         foreach (var item in PlayerItems)
         {
-            item.gamePosition = JsonUtility.FromJson<PositionInGame>(item.position_in_game); ;
+            item.gamePosition = JsonUtility.FromJson<PositionInGame>(item.position_in_game);
         }
         StartCoroutine(nameof(GetIcons));
     }
@@ -100,20 +105,23 @@ public class InventoryServer : MonoBehaviour
                 }
             }
         }
-        _loadSystem.OnServerDatasLoaded?.Invoke();
+        _loadSystem.OnServerInventoryLoaded?.Invoke();
     }
 
-    private IEnumerator GetOutfitSkin(Items currentItem)
+    public IEnumerator GetOutfitSkin(Items currentItem)
     {
+        //_www.timeout = ServerSettings.TimeOut;
         foreach (var item in PlayerItems)
         {
-            if(item.item_id == currentItem.item_id)
+            if(item == currentItem)
             {
-
-                _www.timeout = ServerSettings.TimeOut;
                 _www = UnityWebRequestTexture.GetTexture(currentItem.skin_url);
 
                 yield return _www.SendWebRequest();
+                while (!_www.isDone)
+                {
+                    yield return _www;
+                }
                 if (_www.isNetworkError || _www.isHttpError)
                 {
                     Debug.LogError(_www.error);
@@ -121,7 +129,7 @@ public class InventoryServer : MonoBehaviour
                 else
                 {
                     _texture = ((DownloadHandlerTexture)_www.downloadHandler).texture;
-                    item.sprite = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), new Vector2());
+                    item.sprite = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), new Vector2(item.gamePosition.pivX, item.gamePosition.pivY));
                 }
                 break;
             }
@@ -150,7 +158,7 @@ public class Items
 
     public PositionInGame gamePosition;
     public Sprite icon;
-    public Sprite sprite;
+    public Sprite sprite = null;
     public Sprite signature = null;
 }
 

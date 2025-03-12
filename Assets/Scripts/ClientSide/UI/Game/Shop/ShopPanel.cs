@@ -21,6 +21,7 @@ public class ShopPanel : MonoBehaviour
 
     [Header("Category")]
     [SerializeField] private List<Button> _types;
+    [SerializeField] private List<Button> _skinCategory;
     [SerializeField] private TypesButton _typesButton;
 
     [Header("Server")]
@@ -34,11 +35,32 @@ public class ShopPanel : MonoBehaviour
     [SerializeField] private bool _isProductsLoading = true, _isPurchasesLoading = false;
 
     public string ProductType { get => _productType; set => _productType = value; }
+
+    private SkinTypes _skinType = SkinTypes.HATID;
+
+    public void SkinTypeChange(int ID)
+    {
+        _typesButton.TypeButtons = _skinCategory;
+        switch (ID)
+        {
+            case (int)SkinTypes.HATID:
+                _skinType = SkinTypes.HATID; break;
+            case (int)SkinTypes.BODYID:
+                _skinType = SkinTypes.BODYID; break;
+            case (int)SkinTypes.LEGSID:
+                _skinType = SkinTypes.LEGSID; break;
+            case (int)SkinTypes.SKINID:
+                _skinType = SkinTypes.SKINID; break;
+            default:
+                break;
+        }
+    }
     public void StartLoadProducts()
     {
         _isProductsLoading = true;
         _isPurchasesLoading = !_isProductsLoading;
         _panelTitle.text = "Магазин";
+        ClearListView();
         StartLoad();
         _shop.DownloadProducts(ProductType);
     }
@@ -48,6 +70,7 @@ public class ShopPanel : MonoBehaviour
         _isPurchasesLoading = true;
         _isProductsLoading = !_isPurchasesLoading;
         _panelTitle.text = "Покупки";
+        ClearListView();
         StartLoad();
         _purchase.GetActivePurchases();
     }
@@ -59,11 +82,11 @@ public class ShopPanel : MonoBehaviour
         _typesButton.TypeButtons = _types;
         InGameLoader.IsBorryActivate = false;
         Actions.OnStartLoad?.Invoke();
-        ClearListView();
     }
 
     public void OnProductsLoaded()
     {
+        ClearListView();
         if (!_isProductsLoading) return;
         if (!CheckArrayNullOrEmpty(_shop.Products))
         {
@@ -74,9 +97,16 @@ public class ShopPanel : MonoBehaviour
         }
         foreach (var item in _shop.Products)
         {
-            if (item.type.Equals(_productType))
+            if (item.type.Equals(_productType) && !item.type.Equals("game"))
             {
                 InitializeItem(item, _productPrefab);
+            }
+            if (item.type.Equals(_productType) && item.type.Equals("game"))
+            {
+                if (item.type_id == (int)_skinType)
+                {
+                    InitializeItem(item, _productPrefab);
+                }
             }
         }
         OnListCreated();

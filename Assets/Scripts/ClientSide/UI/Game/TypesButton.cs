@@ -64,6 +64,7 @@ public class TypesButton : MonoBehaviour
         }
     }
 
+
     public void SetAllButtonsActive()
     {
         foreach (var item in TypeButtons)

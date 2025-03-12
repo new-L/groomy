@@ -15,4 +15,5 @@ enum ScenesIndex
     UserScene = 1,
     AdminScene = 2,
     RhytmGameScene = 3,
+    OutfitScene = 4
 }

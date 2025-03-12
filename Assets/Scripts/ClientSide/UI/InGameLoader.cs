@@ -21,6 +21,7 @@ public class InGameLoader : MonoBehaviour
     {
         Tables.Clear();
         Tables.Add(DBTablesName.UserCurrency, false);
+        Tables.Add(DBTablesName.UserOutfit, false);
     }
 
     private void Start()
@@ -39,10 +40,6 @@ public class InGameLoader : MonoBehaviour
     {
         IsBorryActivate = isActive;
     }
-    //private void FixedUpdate()
-    //{
-    //  Debug.Log("IsBorryActivate: " + IsBorryActivate);
-    //}
     private void OnEnable()
     {
         Actions.OnStartLoad += ActivateLoadPanel;

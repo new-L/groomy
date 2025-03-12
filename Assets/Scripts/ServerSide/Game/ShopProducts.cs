@@ -66,6 +66,7 @@ public class ShopProducts : MonoBehaviour
         yield return www.SendWebRequest();
         if (www.error != null) { Debug.Log("Не удалось связаться с сервером!"); yield break; }
         _json = JsonHelper.fixJson(www.downloadHandler.text);
+        Debug.Log(www.downloadHandler.text);
         _products = JsonHelper.FromJson<ShopProduct>(_json);
         _onProductsLoad?.Invoke();
     }
@@ -97,7 +98,14 @@ public class ShopProducts : MonoBehaviour
             { 
                 _notification.Set(NotificationType.Attention, "Товар закончился!");
                 _notification.Play();
-                _onPurchaseBreak?.Invoke(); }
+                _onPurchaseBreak?.Invoke(); 
+            }
+            else if (_text.Contains("{item_exist_error}")) 
+            { 
+                _notification.Set(NotificationType.Attention, "У тебя есть!");
+                _notification.Play();
+                _onPurchaseBreak?.Invoke(); 
+            }
             else _onProductPurchased?.Invoke();
         }
     }
@@ -183,5 +191,6 @@ public class ShopProduct
     public int price;
     public int count;
     public string img_url;
+    public int type_id = 0;
     public Sprite icon;
 }

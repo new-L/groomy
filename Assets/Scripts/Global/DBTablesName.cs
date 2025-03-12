@@ -14,6 +14,7 @@ public class DBTablesName : MonoBehaviour
     #region UsersTables
     private static string _users = "user";
     private static string _userCurrency = "userscurrency";
+    private static string _userOutfit = "useroutfit";
     #endregion
 
     [SerializeField] private List<string> taskTables;
@@ -26,6 +27,7 @@ public class DBTablesName : MonoBehaviour
     public static string Dailytasks { get => _dailytasks; }
     public static string Users { get => _users; set => _users = value; }
     public static string UserCurrency { get => _userCurrency; set => _userCurrency = value; }
+    public static string UserOutfit { get => _userOutfit; private set => _userOutfit = value; }
     public List<string> TaskTables { get => taskTables; set => taskTables = value; }
     #endregion
 
