@@ -122,7 +122,7 @@ public class EndGame : MonoBehaviour
         yield return new WaitForSecondsRealtime(.4f);
         CoinsAdd(ComboXCalc(_scoreManager.ComboX5Count, 0.15f, true)); //Считаем по х5
         RatingAdd(ComboXCalc(_scoreManager.ComboX5Count, .3f, false));
-        _multiplicatorList.SetUpListElement("Кобмо x5",
+        _multiplicatorList.SetUpListElement("Комбо x5",
             _scoreManager.ComboX5Count.ToString(),
             ComboXCalc(_scoreManager.ComboX5Count, 0.15f, true).ToString(),
             ComboXCalc(_scoreManager.ComboX5Count, .3f, false).ToString());
@@ -130,7 +130,7 @@ public class EndGame : MonoBehaviour
         yield return new WaitForSecondsRealtime(.4f);
         CoinsAdd(ComboXCalc(_scoreManager.ComboX10Count, 0.4f, true)); //Считаем по х10
         RatingAdd(ComboXCalc(_scoreManager.ComboX10Count, .5f, false));
-        _multiplicatorList.SetUpListElement("Кобмо x10",
+        _multiplicatorList.SetUpListElement("Комбо x10",
             _scoreManager.ComboX10Count.ToString(),
             ComboXCalc(_scoreManager.ComboX10Count, 0.4f, true).ToString(),
             ComboXCalc(_scoreManager.ComboX10Count, .5f, false).ToString());

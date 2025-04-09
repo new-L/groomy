@@ -4,15 +4,15 @@ public class URLs : MonoBehaviour
 {
     //Менять в билде, убрав TEST
     #region UsersURLs
-    private static string _authorization = "https://unnamedplace.ru/dbhelper/test/authorization.php";
-    private static string _userCurrency = "https://unnamedplace.ru/dbhelper/test/usercurrency.php";
-    private static string _rating = "https://unnamedplace.ru/dbhelper/test/ratings.php";
-    private static string _tutorial = "https://unnamedplace.ru/dbhelper/test/tutorials.php";
-    private string _shopProduct = "https://unnamedplace.ru/dbhelper/test/shop.php";
-    private string _purchaseProduct = "https://unnamedplace.ru/dbhelper/test/purchase.php";
-    private static string _rhytmgamelimit = "https://unnamedplace.ru/dbhelper/test/rhytmgamelimit.php";
-    private static string _inventory = "https://unnamedplace.ru/dbhelper/test/inventory.php";
-    private static string _outfit = "https://unnamedplace.ru/dbhelper/test/useroutfit.php";
+    private static string _authorization = "https://unnamedplace.ru/dbhelper/authorization.php";
+    private static string _userCurrency = "https://unnamedplace.ru/dbhelper/usercurrency.php";
+    private static string _rating = "https://unnamedplace.ru/dbhelper/ratings.php";
+    private static string _tutorial = "https://unnamedplace.ru/dbhelper/tutorials.php";
+    private string _shopProduct = "https://unnamedplace.ru/dbhelper/shop.php";
+    private string _purchaseProduct = "https://unnamedplace.ru/dbhelper/purchase.php";
+    private static string _rhytmgamelimit = "https://unnamedplace.ru/dbhelper/rhytmgamelimit.php";
+    private static string _inventory = "https://unnamedplace.ru/dbhelper/inventory.php";
+    private static string _outfit = "https://unnamedplace.ru/dbhelper/useroutfit.php";
 
     public static string Authorization { get => _authorization; }
     public static string UserCurrency { get => _userCurrency; }
@@ -29,19 +29,19 @@ public class URLs : MonoBehaviour
 
     #region AdminsURLs
     #region Tasks
-    private static string _taskSettings = "https://unnamedplace.ru/dbhelper/test/tasksettings.php";
-    private static string _newTask = "https://unnamedplace.ru/dbhelper/test/newtask.php";
-    private static string _updateTask = "https://unnamedplace.ru/dbhelper/test/updatetask.php";
-    private static string _deleteTask = "https://unnamedplace.ru/dbhelper/test/deletetask.php";
-    private static string _scheduleTask = "https://unnamedplace.ru/dbhelper/test/scheduletask.php";
-    private static string _dailyTask = "https://unnamedplace.ru/dbhelper/test/dailytasks.php";
-    private static string _deScheduleTask = "https://unnamedplace.ru/dbhelper/test/descheduletask.php";
-    private static string _taskOnReview = "https://unnamedplace.ru/dbhelper/test/taskonreview.php";
+    private static string _taskSettings = "https://unnamedplace.ru/dbhelper/tasksettings.php";
+    private static string _newTask = "https://unnamedplace.ru/dbhelper/newtask.php";
+    private static string _updateTask = "https://unnamedplace.ru/dbhelper/updatetask.php";
+    private static string _deleteTask = "https://unnamedplace.ru/dbhelper/deletetask.php";
+    private static string _scheduleTask = "https://unnamedplace.ru/dbhelper/scheduletask.php";
+    private static string _dailyTask = "https://unnamedplace.ru/dbhelper/dailytasks.php";
+    private static string _deScheduleTask = "https://unnamedplace.ru/dbhelper/descheduletask.php";
+    private static string _taskOnReview = "https://unnamedplace.ru/dbhelper/taskonreview.php";
     #endregion
 
     #region Users
-    private static string _users = "https://unnamedplace.ru/dbhelper/test/admin_userssettings.php";
-    private static string _userCompletedTask = "https://unnamedplace.ru/dbhelper/test/usertask.php";
+    private static string _users = "https://unnamedplace.ru/dbhelper/admin_userssettings.php";
+    private static string _userCompletedTask = "https://unnamedplace.ru/dbhelper/usertask.php";
     #endregion
 
     #region Get/Set
@@ -61,7 +61,7 @@ public class URLs : MonoBehaviour
     #endregion
 
     #region RhytmMiniGame
-    private static string _melodiesList = "https://unnamedplace.ru/dbhelper/test/getmelodies.php";
+    private static string _melodiesList = "https://unnamedplace.ru/dbhelper/getmelodies.php";
     public static string MelodiesList { get => _melodiesList; }
     #endregion
 }

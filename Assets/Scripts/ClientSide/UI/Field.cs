@@ -63,7 +63,7 @@ public class Field : MonoBehaviour
 
     public void SendAuthorizationRequest()
     {
-        if (!isFieldEmpty(LoginInputField) || !isFieldEmpty(PasswordIpnutField)) { _notification.Set(NotificationType.Attention, "Один из полей пуст!"); _notification.Play(); return; }
+        if (!isFieldEmpty(LoginInputField) || !isFieldEmpty(PasswordIpnutField)) { _notification.Set(NotificationType.Attention, "Необходимо заполнить все поля!"); _notification.Play(); return; }
         if (_saveToggle.isOn) _playerPrefs.SaveAuthDatas(Login, Password);
         else _playerPrefs.DeleteAuthDatas();
         _authorization.GetAuthorizationStatus(Login, Password);
